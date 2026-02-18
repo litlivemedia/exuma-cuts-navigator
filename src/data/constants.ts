@@ -10,7 +10,9 @@ export const WIND_FETCH_LAT = 24.385
 export const WIND_FETCH_LON = -76.627
 
 // Slack water window: +/- minutes from high/low
-export const SLACK_WINDOW_MINUTES = 30
+// Per Rule of 12ths, the first hour of each tidal cycle moves only 1/12
+// of the range — practical safe-transit window is ~45 min either side.
+export const SLACK_WINDOW_MINUTES = 45
 
 // Wind-vs-current thresholds
 export const WIND_OPPOSING_MIN_KNOTS = 10

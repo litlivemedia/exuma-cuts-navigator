@@ -207,7 +207,7 @@ export function scoreTransitWindows(
     const direction = sw.type === 'H'
       ? 'flooding' as const // approaching high = flooding
       : 'ebbing' as const   // approaching low = ebbing
-    const windOpposing = isWindAgainstCurrent(direction, windDir, windSpeed)
+    const windOpposing = isWindAgainstCurrent(direction, windDir, windSpeed, cut.bearingDeg)
 
     // Depth for depth-critical
     let depthFt: number | null = null

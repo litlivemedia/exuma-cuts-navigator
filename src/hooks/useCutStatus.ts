@@ -45,13 +45,14 @@ export function computeCutStatus(
   const windGust = wind?.gustKnots ?? 0
   const windDir = wind?.directionDeg ?? 0
 
-  const opposing = isWindAgainstCurrent(direction, windDir, windSpeed)
+  const opposing = isWindAgainstCurrent(direction, windDir, windSpeed, cut.bearingDeg)
   const { level, reasons } = assessSafety(
     direction,
     currentSpeed,
     windSpeed,
     windDir,
-    windGust
+    windGust,
+    cut.bearingDeg
   )
 
   const nextSlack = getNextSlackWindow(adjusted, now)

@@ -13,6 +13,10 @@ export interface CutDefinition {
   maxCurrentKnots: number
   notes: string
   group: CutGroup
+  /** Approximate bearing (degrees true) of the cut channel axis, measured
+   *  from the Bahama Bank side toward Exuma Sound. Ebb current flows along
+   *  this bearing; flood current flows the reciprocal. */
+  bearingDeg: number
   /** Controlling depth at mean low water, in feet. Only for depth-critical cuts. */
   mlwDepthFt?: number
   /** If true, depth is the primary concern, not waves/current. */

@@ -10,25 +10,31 @@ import {
 } from '../data/constants.ts'
 
 /**
- * All Exuma cuts run roughly E-W.
- * Ebbing: current flows east (out to Exuma Sound) ~90 degrees
- * Flooding: current flows west (onto Great Bahama Bank) ~270 degrees
+ * Each cut has its own bearing (degrees true) from Bank side toward Exuma Sound.
+ * Ebbing: current flows along that bearing (out to Exuma Sound).
+ * Flooding: current flows along the reciprocal (onto the Bank).
  *
  * Wind direction is meteorological: direction wind comes FROM.
- * Wind FROM east (90) opposes current FLOWING east (ebbing).
+ * Wind FROM the same direction as the ebb bearing means waves travel
+ * opposite to the ebb current — the classic wind-against-current hazard.
  */
 export function isWindAgainstCurrent(
   currentDirection: TideDirection,
   windDirectionDeg: number,
-  windSpeedKnots: number
+  windSpeedKnots: number,
+  cutBearingDeg: number = 55
 ): boolean {
   if (currentDirection === 'slack') return false
   if (windSpeedKnots < WIND_OPPOSING_MIN_KNOTS) return false
 
-  const currentFlowDeg = currentDirection === 'ebbing' ? 90 : 270
+  // Ebb flows along the cut bearing; flood flows the reciprocal
+  const currentFlowDeg = currentDirection === 'ebbing'
+    ? cutBearingDeg
+    : (cutBearingDeg + 180) % 360
 
   // Wind FROM direction vs current FLOW direction
-  // Wind FROM east (90) opposes current flowing east (90)
+  // When wind comes FROM the same direction as current flow,
+  // the waves travel opposite to the current → standing waves
   const angleDiff = Math.abs(windDirectionDeg - currentFlowDeg)
   const normalizedDiff = angleDiff > 180 ? 360 - angleDiff : angleDiff
 
@@ -40,13 +46,15 @@ export function assessSafety(
   currentSpeedKnots: number,
   windSpeedKnots: number,
   windDirectionDeg: number,
-  windGustKnots: number
+  windGustKnots: number,
+  cutBearingDeg: number = 55
 ): { level: SafetyLevel; reasons: string[] } {
   const reasons: string[] = []
   const opposing = isWindAgainstCurrent(
     currentDirection,
     windDirectionDeg,
-    windSpeedKnots
+    windSpeedKnots,
+    cutBearingDeg
   )
 
   // HAZARDOUS: wind opposing current with significant force
