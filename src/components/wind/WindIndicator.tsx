@@ -15,10 +15,10 @@ export function WindIndicator({
   const arrowRotation = directionDeg + 180
 
   return (
-    <div className={`flex items-center gap-2 text-sm ${isOpposing ? 'text-red-700 font-semibold' : 'text-slate-600'}`}>
+    <div className={`flex items-center gap-2 ${isOpposing ? 'text-red-600' : 'text-slate-400'}`}>
       <svg
-        width="20"
-        height="20"
+        width="16"
+        height="16"
         viewBox="0 0 20 20"
         className="shrink-0"
         style={{ transform: `rotate(${arrowRotation}deg)` }}
@@ -28,14 +28,14 @@ export function WindIndicator({
           fill="currentColor"
         />
       </svg>
-      <span>
-        {cardinal} {Math.round(speedKnots)} kts
+      <span className={`text-[13px] ${isOpposing ? 'font-semibold' : 'font-medium'}`}>
+        {cardinal} {Math.round(speedKnots)}kts
         {gustKnots > speedKnots + 5 && (
-          <span className="text-slate-400"> G{Math.round(gustKnots)}</span>
+          <span className={isOpposing ? 'text-red-400' : 'text-slate-300'}> G{Math.round(gustKnots)}</span>
         )}
       </span>
       {isOpposing && (
-        <span className="text-red-600 text-xs font-bold">OPPOSING</span>
+        <span className="text-[10px] font-bold text-red-500 uppercase tracking-wider">opposing</span>
       )}
     </div>
   )
