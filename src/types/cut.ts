@@ -2,7 +2,7 @@ import type { TideDirection } from './tide.ts'
 
 export type SafetyLevel = 'safe' | 'caution' | 'hazardous'
 
-export type CutGroup = 'exuma' | 'raggeds'
+export type CutGroup = 'exuma' | 'southern' | 'raggeds'
 
 export interface CutDefinition {
   id: string

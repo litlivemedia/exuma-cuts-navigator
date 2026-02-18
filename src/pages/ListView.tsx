@@ -13,7 +13,13 @@ export function ListView({
   dailyForecasts: MarineDaily[]
 }) {
   const exumaCuts = statuses.filter((s) => s.cut.group === 'exuma')
+  const southernCuts = statuses.filter((s) => s.cut.group === 'southern')
   const raggedsCuts = statuses.filter((s) => s.cut.group === 'raggeds')
+
+  const scrollSections = [
+    ...(southernCuts.length > 0 ? [{ id: 'southern-section', label: 'Southern Exumas', count: southernCuts.length }] : []),
+    ...(raggedsCuts.length > 0 ? [{ id: 'raggeds-section', label: 'The Raggeds', count: raggedsCuts.length }] : []),
+  ]
 
   return (
     <div className="pl-4 pr-6 py-4 pb-24 space-y-2">
@@ -24,8 +30,8 @@ export function ListView({
         </div>
       )}
 
-      {/* ═══ RAGGEDS TEASER — at top so users know to scroll ═══ */}
-      {raggedsCuts.length > 0 && (
+      {/* ═══ SCROLL TEASER — shows what's below ═══ */}
+      {scrollSections.length > 0 && (
         <div className="rounded-lg bg-sky-100/70 border border-sky-200/60 px-3 py-2.5 mb-2">
           <div className="flex items-center gap-2">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-sky-500 shrink-0">
@@ -33,15 +39,20 @@ export function ListView({
               <path d="m19 12-7 7-7-7" />
             </svg>
             <p className="text-[12px] text-sky-800">
-              <span className="font-semibold">The Raggeds</span> — {raggedsCuts.length} cuts below · scroll down or{' '}
-              <button
-                onClick={() => {
-                  document.getElementById('raggeds-section')?.scrollIntoView({ behavior: 'smooth' })
-                }}
-                className="underline font-semibold active:text-sky-600"
-              >
-                jump there
-              </button>
+              {scrollSections.map((s, i) => (
+                <span key={s.id}>
+                  {i > 0 && ' · '}
+                  <button
+                    onClick={() => {
+                      document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth' })
+                    }}
+                    className="underline font-semibold active:text-sky-600"
+                  >
+                    {s.label}
+                  </button>
+                  <span className="text-sky-600"> ({s.count})</span>
+                </span>
+              ))}
             </p>
           </div>
         </div>
@@ -69,10 +80,35 @@ export function ListView({
         </div>
       )}
 
+      {/* ═══ SOUTHERN EXUMAS ═══ */}
+      {southernCuts.length > 0 && (
+        <div id="southern-section">
+          <div className="flex items-center gap-2 px-1 pt-4 pb-2">
+            <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide">
+              Southern Exumas
+            </h2>
+            <div className="flex-1 h-px bg-slate-300" />
+            <StatusSummary cuts={southernCuts} />
+          </div>
+          <p className="text-xs text-slate-500 px-1 -mt-1 mb-2.5">
+            Lee Stocking Island to George Town
+          </p>
+          <div className="space-y-3">
+            {southernCuts.map((s) => (
+              <CutCard
+                key={s.cut.id}
+                status={s}
+                onSelect={() => onSelect(s.cut.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ═══ RAGGEDS CUTS ═══ */}
       {raggedsCuts.length > 0 && (
         <div id="raggeds-section">
-          <div className="flex items-center gap-2 px-1 pt-1 pb-2">
+          <div className="flex items-center gap-2 px-1 pt-4 pb-2">
             <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide">
               Off to The Raggeds
             </h2>
