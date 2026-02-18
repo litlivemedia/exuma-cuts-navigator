@@ -147,6 +147,16 @@ function DepthCriticalCard({
           isOpposing={status.isWindAgainstCurrent}
         />
       </div>
+
+      {/* Tap affordance */}
+      <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-2.5 -mb-1">
+        <span className="text-[11px] font-medium text-sky-600">
+          Transit planner & details
+        </span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-sky-400">
+          <path d="m9 18 6-6-6-6" />
+        </svg>
+      </div>
     </button>
   )
 }
@@ -273,6 +283,16 @@ function StandardCard({
           Slack water NOW — safe transit window
         </div>
       )}
+
+      {/* Tap affordance */}
+      <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-2.5 -mb-1">
+        <span className="text-[11px] font-medium text-sky-600">
+          Transit planner & details
+        </span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-sky-400">
+          <path d="m9 18 6-6-6-6" />
+        </svg>
+      </div>
     </button>
   )
 }
