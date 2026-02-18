@@ -3,11 +3,6 @@ import type { MarineDaily } from '../types/marine.ts'
 import { CutCard } from '../components/cuts/CutCard.tsx'
 import { WeatherBriefing } from '../components/weather/WeatherBriefing.tsx'
 
-const GROUP_LABELS: Record<string, string> = {
-  exuma: 'Exuma Cuts',
-  raggeds: 'Off to The Raggeds',
-}
-
 export function ListView({
   statuses,
   onSelect,
@@ -20,11 +15,6 @@ export function ListView({
   const exumaCuts = statuses.filter((s) => s.cut.group === 'exuma')
   const raggedsCuts = statuses.filter((s) => s.cut.group === 'raggeds')
 
-  const sections = [
-    { key: 'exuma', label: GROUP_LABELS.exuma, cuts: exumaCuts },
-    { key: 'raggeds', label: GROUP_LABELS.raggeds, cuts: raggedsCuts },
-  ].filter((s) => s.cuts.length > 0)
-
   return (
     <div className="pl-4 pr-6 py-4 pb-24 space-y-2">
       {/* Weather briefing — one for the whole chain */}
@@ -34,17 +24,18 @@ export function ListView({
         </div>
       )}
 
-      {sections.map((section) => (
-        <div key={section.key}>
+      {/* ═══ EXUMA CUTS ═══ */}
+      {exumaCuts.length > 0 && (
+        <div>
           <div className="flex items-center gap-2 px-1 pt-2 pb-2">
             <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide">
-              {section.label}
+              Exuma Cuts
             </h2>
             <div className="flex-1 h-px bg-slate-300" />
-            <StatusSummary cuts={section.cuts} />
+            <StatusSummary cuts={exumaCuts} />
           </div>
           <div className="space-y-3">
-            {section.cuts.map((s) => (
+            {exumaCuts.map((s) => (
               <CutCard
                 key={s.cut.id}
                 status={s}
@@ -53,8 +44,49 @@ export function ListView({
             ))}
           </div>
         </div>
-      ))}
+      )}
 
+      {/* ═══ RAGGEDS TEASER — draws the eye down ═══ */}
+      {raggedsCuts.length > 0 && (
+        <div className="pt-4 pb-1">
+          <div className="flex flex-col items-center gap-1">
+            <div className="w-px h-6 bg-gradient-to-b from-transparent to-slate-300" />
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 animate-bounce">
+              <path d="M12 5v14" />
+              <path d="m19 12-7 7-7-7" />
+            </svg>
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
+              Heading to The Raggeds?
+            </span>
+            <div className="w-px h-4 bg-gradient-to-b from-slate-300 to-transparent" />
+          </div>
+        </div>
+      )}
+
+      {/* ═══ RAGGEDS CUTS ═══ */}
+      {raggedsCuts.length > 0 && (
+        <div>
+          <div className="flex items-center gap-2 px-1 pt-1 pb-2">
+            <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide">
+              Off to The Raggeds
+            </h2>
+            <div className="flex-1 h-px bg-slate-300" />
+            <StatusSummary cuts={raggedsCuts} />
+          </div>
+          <p className="text-xs text-slate-500 px-1 -mt-1 mb-2.5">
+            Depth-critical — transit at or near high tide
+          </p>
+          <div className="space-y-3">
+            {raggedsCuts.map((s) => (
+              <CutCard
+                key={s.cut.id}
+                status={s}
+                onSelect={() => onSelect(s.cut.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
