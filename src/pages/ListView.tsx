@@ -24,6 +24,29 @@ export function ListView({
         </div>
       )}
 
+      {/* ═══ RAGGEDS TEASER — at top so users know to scroll ═══ */}
+      {raggedsCuts.length > 0 && (
+        <div className="rounded-lg bg-sky-100/70 border border-sky-200/60 px-3 py-2.5 mb-2">
+          <div className="flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-sky-500 shrink-0">
+              <path d="M12 5v14" />
+              <path d="m19 12-7 7-7-7" />
+            </svg>
+            <p className="text-[12px] text-sky-800">
+              <span className="font-semibold">The Raggeds</span> — {raggedsCuts.length} cuts below · scroll down or{' '}
+              <button
+                onClick={() => {
+                  document.getElementById('raggeds-section')?.scrollIntoView({ behavior: 'smooth' })
+                }}
+                className="underline font-semibold active:text-sky-600"
+              >
+                jump there
+              </button>
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* ═══ EXUMA CUTS ═══ */}
       {exumaCuts.length > 0 && (
         <div>
@@ -46,26 +69,9 @@ export function ListView({
         </div>
       )}
 
-      {/* ═══ RAGGEDS TEASER — draws the eye down ═══ */}
-      {raggedsCuts.length > 0 && (
-        <div className="pt-4 pb-1">
-          <div className="flex flex-col items-center gap-1">
-            <div className="w-px h-6 bg-gradient-to-b from-transparent to-slate-300" />
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 animate-bounce">
-              <path d="M12 5v14" />
-              <path d="m19 12-7 7-7-7" />
-            </svg>
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
-              Heading to The Raggeds?
-            </span>
-            <div className="w-px h-4 bg-gradient-to-b from-slate-300 to-transparent" />
-          </div>
-        </div>
-      )}
-
       {/* ═══ RAGGEDS CUTS ═══ */}
       {raggedsCuts.length > 0 && (
-        <div>
+        <div id="raggeds-section">
           <div className="flex items-center gap-2 px-1 pt-1 pb-2">
             <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide">
               Off to The Raggeds
