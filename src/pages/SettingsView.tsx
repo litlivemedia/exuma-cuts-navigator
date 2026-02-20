@@ -66,7 +66,7 @@ export function SettingsView({
           </p>
           <p>
             <strong>Slack</strong> = ~1 hour window around high/low tide with minimal current.
-            Best time to transit.
+            Suggested time to transit.
           </p>
           <p>
             <strong>Wind Opposing Current</strong> = wind blowing against the direction of

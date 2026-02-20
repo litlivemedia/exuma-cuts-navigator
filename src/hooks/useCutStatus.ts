@@ -79,11 +79,11 @@ export function computeCutStatus(
     }
   }
 
-  // Depth calculations for depth-critical cuts
+  // Depth calculations for all cuts with known MLW depth
   let depthNowFt: number | null = null
   let nextHighTide: CutStatus['nextHighTide'] = null
 
-  if (cut.depthCritical && cut.mlwDepthFt != null) {
+  if (cut.mlwDepthFt != null) {
     // Depth = base MLW depth + current tide height above MLLW
     // NOAA heights are relative to MLLW, so negative values = below MLLW
     depthNowFt = cut.mlwDepthFt + heightFt

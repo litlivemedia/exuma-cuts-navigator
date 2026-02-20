@@ -218,14 +218,23 @@ function StandardCard({
           <SafetyPill level={status.safetyLevel} />
         </div>
 
-        {/* Row 2: Current status — the big glanceable info */}
-        <div className="mt-3 flex items-baseline gap-2">
-          <span className={`text-[15px] font-semibold ${dirColor}`}>
-            {dirLabel}
-          </span>
-          {status.tideDirection !== 'slack' && (
-            <span className="text-sm text-slate-400">
-              {status.currentSpeedKnots.toFixed(1)} kts
+        {/* Row 2: Current status + depth */}
+        <div className="mt-3 flex items-baseline justify-between">
+          <div className="flex items-baseline gap-2">
+            <span className={`text-[15px] font-semibold ${dirColor}`}>
+              {dirLabel}
+            </span>
+            {status.tideDirection !== 'slack' && (
+              <span className="text-sm text-slate-400">
+                {status.currentSpeedKnots.toFixed(1)} kts
+              </span>
+            )}
+          </div>
+          {status.depthNowFt != null && (
+            <span className={`text-sm font-semibold ${
+              status.depthNowFt < 6 ? 'text-red-600' : status.depthNowFt < 8 ? 'text-amber-600' : 'text-slate-500'
+            }`}>
+              {status.depthNowFt.toFixed(1)}ft
             </span>
           )}
         </div>
@@ -257,7 +266,7 @@ function StandardCard({
         </div>
       </div>
 
-      {/* Best transit / slack banners */}
+      {/* Suggested transit / slack banners */}
       <div className="px-4 pb-1">
         {status.bestDaylightWindow && (
           <div className="mt-2.5 flex items-center gap-2 text-[13px] text-sky-700 bg-sky-50/80 border border-sky-200/50 rounded-xl px-3 py-2">
@@ -273,7 +282,7 @@ function StandardCard({
               <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
             </svg>
             <span>
-              <span className="font-semibold">Best transit</span>{' '}
+              <span className="font-semibold">Suggested transit</span>{' '}
               <span className="text-sky-500">{status.bestDaylightWindow.label}</span>
             </span>
           </div>

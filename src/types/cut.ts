@@ -49,9 +49,9 @@ export interface CutStatus {
     type: 'H' | 'L'
     label: string
   } | null
-  /** Estimated current depth in feet (mlwDepth + tide height). Only for depth-critical cuts. */
+  /** Estimated current depth in feet (mlwDepth + tide height). Available for all cuts with mlwDepthFt. */
   depthNowFt: number | null
-  /** Next high tide info for depth-critical cuts */
+  /** Next high tide info. Available for all cuts with mlwDepthFt. */
   nextHighTide: {
     time: Date
     heightFt: number

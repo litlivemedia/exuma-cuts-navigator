@@ -129,6 +129,14 @@ export function ListView({
           </div>
         </div>
       )}
+      {/* ═══ DISCLAIMER ═══ */}
+      <div className="mt-6 rounded-xl border border-amber-200/60 bg-amber-50/60 px-4 py-3">
+        <p className="text-[11px] text-amber-700 leading-relaxed">
+          <span className="font-semibold">Disclaimer:</span> All depths, currents, and transit suggestions are estimates based on
+          NOAA predictions and calculated offsets. Not a substitute for local knowledge or
+          visual assessment. Always verify conditions before transiting any cut.
+        </p>
+      </div>
     </div>
   )
 }
