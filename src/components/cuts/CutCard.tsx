@@ -32,15 +32,9 @@ function SafetyPill({ level }: { level: CutStatus['safetyLevel'] }) {
   )
 }
 
-// ─── Depth-critical card (Raggeds / Southern) ──────────────────
+// ─── Shared depth block ─────────────────────────────────────────
 
-function DepthCriticalCard({
-  status,
-  onSelect,
-}: {
-  status: CutStatus
-  onSelect: () => void
-}) {
+function DepthBlock({ status }: { status: CutStatus }) {
   const depthNow = status.depthNowFt
   const nextHigh = status.nextHighTide
   const isTideRising = status.tideDirection === 'flooding'
@@ -60,19 +54,7 @@ function DepthCriticalCard({
         : 'bg-emerald-50/80 border-emerald-200/60'
 
   return (
-    <button
-      onClick={onSelect}
-      className="w-full text-left rounded-2xl bg-white border border-slate-200/80 shadow-sm active:scale-[0.995] transition-all"
-    >
-      {/* Header row */}
-      <div className="px-4 pt-4 pb-3 flex items-center justify-between gap-3">
-        <h3 className="text-[17px] font-bold text-slate-900 tracking-tight">
-          {status.cut.name}
-        </h3>
-        <SafetyPill level={status.safetyLevel} />
-      </div>
-
-      {/* Depth block */}
+    <>
       <div className={`mx-3 rounded-xl border p-3.5 ${depthBg}`}>
         <div className="flex items-end justify-between">
           <div>
@@ -131,6 +113,33 @@ function DepthCriticalCard({
           </div>
         </div>
       )}
+    </>
+  )
+}
+
+// ─── Depth-critical card (Raggeds) ──────────────────────────────
+
+function DepthCriticalCard({
+  status,
+  onSelect,
+}: {
+  status: CutStatus
+  onSelect: () => void
+}) {
+  return (
+    <button
+      onClick={onSelect}
+      className="w-full text-left rounded-2xl bg-white border border-slate-200/80 shadow-sm active:scale-[0.995] transition-all"
+    >
+      {/* Header row */}
+      <div className="px-4 pt-4 pb-3 flex items-center justify-between gap-3">
+        <h3 className="text-[17px] font-bold text-slate-900 tracking-tight">
+          {status.cut.name}
+        </h3>
+        <SafetyPill level={status.safetyLevel} />
+      </div>
+
+      <DepthBlock status={status} />
 
       {/* Wind row */}
       <div className="px-4 pt-3">
@@ -218,29 +227,29 @@ function StandardCard({
           <SafetyPill level={status.safetyLevel} />
         </div>
 
-        {/* Row 2: Current status + depth */}
-        <div className="mt-3 flex items-baseline justify-between">
-          <div className="flex items-baseline gap-2">
-            <span className={`text-[15px] font-semibold ${dirColor}`}>
-              {dirLabel}
-            </span>
-            {status.tideDirection !== 'slack' && (
-              <span className="text-sm text-slate-400">
-                {status.currentSpeedKnots.toFixed(1)} kts
-              </span>
-            )}
-          </div>
-          {status.depthNowFt != null && (
-            <span className={`text-sm font-semibold ${
-              status.depthNowFt < 6 ? 'text-red-600' : status.depthNowFt < 8 ? 'text-amber-600' : 'text-slate-500'
-            }`}>
-              {status.depthNowFt.toFixed(1)}ft
+        {/* Row 2: Current speed */}
+        <div className="mt-2 flex items-baseline gap-2">
+          <span className={`text-[15px] font-semibold ${dirColor}`}>
+            {dirLabel}
+          </span>
+          {status.tideDirection !== 'slack' && (
+            <span className="text-sm text-slate-400">
+              {status.currentSpeedKnots.toFixed(1)} kts
             </span>
           )}
         </div>
+      </div>
 
-        {/* Row 3: Next tide event */}
-        <div className="mt-1.5 flex items-baseline gap-1.5">
+      {/* Depth block (same style as Raggeds) */}
+      {status.depthNowFt != null && (
+        <div className="pt-2 pb-1">
+          <DepthBlock status={status} />
+        </div>
+      )}
+
+      <div className="px-4 pb-1">
+        {/* Next tide event */}
+        <div className="mt-2 flex items-baseline gap-1.5">
           <span className="text-sm text-slate-500">
             {nextLabel} {status.nextEventHeight.toFixed(1)}ft
           </span>
@@ -254,7 +263,7 @@ function StandardCard({
           </span>
         </div>
 
-        {/* Row 4: Wind */}
+        {/* Wind */}
         <div className="mt-3">
           <WindIndicator
             speedKnots={status.windSpeedKnots}
