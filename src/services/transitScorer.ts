@@ -35,7 +35,6 @@ export interface TransitWindow {
     windScore: number      // 0-10 lower wind = higher
     windOpposing: boolean
     daylight: boolean
-    /** Only for depth-critical cuts */
     depthScore?: number    // 0-10
     depthFt?: number
   }
@@ -47,7 +46,7 @@ export interface TransitWindow {
   currentSpeedKnots: number
   /** Tide height at window */
   heightFt: number
-  /** Depth at window (depth-critical only) */
+  /** Depth at window (all cuts with mlwDepthFt) */
   depthFt: number | null
 }
 
@@ -135,14 +134,13 @@ function computeOverallScore(
 
 function buildSummary(
   window: TransitWindow,
-  cut: CutDefinition,
 ): string {
   const parts: string[] = []
 
   const slackLabel = window.type === 'H' ? 'High slack' : 'Low slack'
   parts.push(slackLabel)
 
-  if (cut.depthCritical && window.depthFt != null) {
+  if (window.depthFt != null) {
     parts.push(`${window.depthFt.toFixed(1)}ft depth`)
   }
 
@@ -212,7 +210,7 @@ export function scoreTransitWindows(
     // Depth for depth-critical
     let depthFt: number | null = null
     let depthScoreVal: number | undefined
-    if (cut.depthCritical && cut.mlwDepthFt != null) {
+    if (cut.mlwDepthFt != null) {
       depthFt = cut.mlwDepthFt + heightFt
       depthScoreVal = scoreDepth(depthFt)
     }
@@ -252,7 +250,7 @@ export function scoreTransitWindows(
       depthFt,
     }
 
-    tw.summary = buildSummary(tw, cut)
+    tw.summary = buildSummary(tw)
     return tw
   })
 
