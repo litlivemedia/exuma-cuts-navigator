@@ -227,7 +227,7 @@ export const cuts: CutDefinition[] = [
     name: 'Hog Cay Cut',
     lat: 23.402,
     lon: -75.512,
-    offsetMinutes: 60,
+    offsetMinutes: 70,
     maxCurrentKnots: 2.5,
     bearingDeg: 45,
     mlwDepthFt: 4.5,
