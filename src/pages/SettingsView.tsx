@@ -45,8 +45,8 @@ export function SettingsView({
         <h3 className="font-semibold text-slate-800">About</h3>
         <div className="text-sm text-slate-600 space-y-2">
           <p>
-            <strong>Exuma Cuts Navigator</strong> helps boaters plan safe transits
-            through the cuts in the Exuma Cays island chain, Bahamas.
+            <strong>Exumas & Ragged Islands Cuts</strong> helps boaters plan safe transits
+            through the cuts in the Exuma Cays and Ragged Islands, Bahamas.
           </p>
           <p>
             Tide predictions are based on NOAA data for Nassau with estimated time

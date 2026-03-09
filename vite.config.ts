@@ -49,9 +49,9 @@ export default defineConfig({
         ],
       },
       manifest: {
-        name: 'Exuma Cuts Navigator',
-        short_name: 'Cuts Nav',
-        description: 'Tide and current guide for Exuma Cays cuts',
+        name: 'Exumas & Ragged Islands Cuts',
+        short_name: 'Cuts',
+        description: 'Tide and current guide for Exuma Cays and Ragged Islands cuts',
         theme_color: '#0c4a6e',
         background_color: '#f0f9ff',
         display: 'standalone',

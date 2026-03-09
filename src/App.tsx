@@ -76,7 +76,7 @@ function App() {
     <div className="flex flex-col min-h-screen min-h-[100dvh] bg-sky-50">
       {/* Header */}
       <header className="bg-sky-900 text-white pl-4 pr-6 py-3">
-        <h1 className="text-lg font-bold">Exuma Cuts Navigator</h1>
+        <h1 className="text-lg font-bold">Exumas & Ragged Islands Cuts</h1>
         <p className="text-sky-300 text-xs">
           {format(now, 'EEEE, MMM d')} &middot; {format(now, 'h:mm a')}
           {!isOnline && (
