@@ -143,19 +143,14 @@ export function CutCard({
 
         {/* ── Row 3b: Waves ── */}
         {wave && wave.waveHeightFt > 0 && (
-          <div className="mt-1.5 flex items-center justify-between text-[13px]">
-            <span className="text-slate-400">
-              Waves {wave.waveHeightFt.toFixed(1)}ft {degreesToCardinal(wave.waveDirectionDeg)}
-            </span>
-            <span className="text-slate-300">
-              {wave.wavePeriodSec.toFixed(0)}s period
-            </span>
+          <div className="mt-1.5 text-[13px] text-slate-400">
+            Waves {wave.waveHeightFt.toFixed(1)}ft {degreesToCardinal(wave.waveDirectionDeg)} · {wave.wavePeriodSec.toFixed(0)}s period
           </div>
         )}
 
         {/* ── Suggested transit time ── */}
         {status.bestDaylightWindow && (
-          <p className="mt-3 text-[13px] text-slate-400">
+          <p className={`mt-3 text-[13px] font-medium ${safetyCfg.text}`}>
             Suggested {status.bestDaylightWindow.label}
           </p>
         )}
