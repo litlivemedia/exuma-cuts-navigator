@@ -2,21 +2,26 @@ import { useEffect } from 'react'
 import { format } from 'date-fns'
 import type { HiLo } from '../../types/tide.ts'
 import type { WindHourly } from '../../types/wind.ts'
+import type { MarineHourly } from '../../types/marine.ts'
 import type { CutStatus } from '../../types/cut.ts'
 import { TideCurve } from '../tide/TideCurve.tsx'
 import { TransitPlanner } from '../transit/TransitPlanner.tsx'
 import { applyOffset } from '../../services/tideCalculator.ts'
+import { getMarineAtTime } from '../../services/marine.ts'
+import { degreesToCardinal } from '../../services/wind.ts'
 
 export function CutDetail({
   status,
   nassauTides,
   windData,
+  marineData,
   now,
   onBack,
 }: {
   status: CutStatus
   nassauTides: HiLo[]
   windData: WindHourly[]
+  marineData: MarineHourly[]
   now: Date
   onBack: () => void
 }) {
@@ -70,6 +75,9 @@ export function CutDetail({
     status.windGustKnots > status.windSpeedKnots + 5
       ? ` g${Math.round(status.windGustKnots)}`
       : ''
+
+  // Wave data (area-wide, closest hour)
+  const wave = getMarineAtTime(marineData, now)
 
   return (
     <div className={`min-h-screen bg-white ${
@@ -170,6 +178,28 @@ export function CutDetail({
           </p>
         )}
       </div>
+
+      {/* ── Waves (inline) ── */}
+      {wave && wave.waveHeightFt > 0 && (
+        <div className="px-5 py-3">
+          <div className="flex items-center justify-between text-[13px]">
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">Waves</span>
+            <span className="text-slate-500">
+              {wave.waveHeightFt.toFixed(1)}ft {degreesToCardinal(wave.waveDirectionDeg)} · {wave.wavePeriodSec.toFixed(0)}s
+            </span>
+          </div>
+          {(wave.swellHeightFt > 0.3 || wave.windWaveHeightFt > 0.3) && (
+            <div className="flex items-center justify-between text-[13px] mt-1.5">
+              <span className="text-slate-300">Breakdown</span>
+              <span className="text-slate-400">
+                {wave.windWaveHeightFt > 0.3 && `Wind ${wave.windWaveHeightFt.toFixed(1)}ft`}
+                {wave.windWaveHeightFt > 0.3 && wave.swellHeightFt > 0.3 && ' · '}
+                {wave.swellHeightFt > 0.3 && `Swell ${wave.swellHeightFt.toFixed(1)}ft`}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Safety Notes ── */}
       {status.safetyReasons.length > 0 && (

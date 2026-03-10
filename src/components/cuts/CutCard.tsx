@@ -1,11 +1,16 @@
 import { format } from 'date-fns'
 import type { CutStatus } from '../../types/cut.ts'
+import type { MarineHourly } from '../../types/marine.ts'
+import { getMarineAtTime } from '../../services/marine.ts'
+import { degreesToCardinal } from '../../services/wind.ts'
 
 export function CutCard({
   status,
+  marineData,
   onSelect,
 }: {
   status: CutStatus
+  marineData: MarineHourly[]
   onSelect: () => void
 }) {
   const depth = status.depthNowFt
@@ -50,6 +55,9 @@ export function CutCard({
     status.windGustKnots > status.windSpeedKnots + 5
       ? ` g${Math.round(status.windGustKnots)}`
       : ''
+
+  // Wave data (area-wide, closest hour)
+  const wave = getMarineAtTime(marineData, new Date())
 
   return (
     <button
@@ -132,6 +140,18 @@ export function CutCard({
             )}
           </span>
         </div>
+
+        {/* ── Row 3b: Waves ── */}
+        {wave && wave.waveHeightFt > 0 && (
+          <div className="mt-1.5 flex items-center justify-between text-[13px]">
+            <span className="text-slate-400">
+              Waves {wave.waveHeightFt.toFixed(1)}ft {degreesToCardinal(wave.waveDirectionDeg)}
+            </span>
+            <span className="text-slate-300">
+              {wave.wavePeriodSec.toFixed(0)}s period
+            </span>
+          </div>
+        )}
 
         {/* ── Row 4: Suggested transit + chevron ── */}
         {status.bestDaylightWindow && (

@@ -66,6 +66,7 @@ function App() {
         status={selectedStatus}
         nassauTides={tides}
         windData={wind}
+        marineData={marine ?? []}
         now={now}
         onBack={() => setSelectedCutId(null)}
       />
@@ -114,7 +115,7 @@ function App() {
         ) : (
           <>
             {tab === 'list' && (
-              <ListView statuses={statuses} onSelect={handleSelectCut} dailyForecasts={dailyForecasts} />
+              <ListView statuses={statuses} onSelect={handleSelectCut} dailyForecasts={dailyForecasts} marineData={marine ?? []} />
             )}
             {tab === 'map' && (
               <MapView statuses={statuses} onSelect={handleSelectCut} />

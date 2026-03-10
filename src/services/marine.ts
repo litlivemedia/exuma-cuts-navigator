@@ -36,6 +36,29 @@ export async function fetchMarineForecast(): Promise<MarineHourly[]> {
   }))
 }
 
+// ── Closest-hour lookup ─────────────────────────────────────────
+
+export function getMarineAtTime(
+  marine: MarineHourly[],
+  targetTime: Date,
+): MarineHourly | null {
+  if (marine.length === 0) return null
+
+  const targetMs = targetTime.getTime()
+  let closest = marine[0]
+  let closestDiff = Math.abs(targetMs - closest.time.getTime())
+
+  for (const m of marine) {
+    const diff = Math.abs(targetMs - m.time.getTime())
+    if (diff < closestDiff) {
+      closest = m
+      closestDiff = diff
+    }
+  }
+
+  return closest
+}
+
 // ── Aggregate to daily ─────────────────────────────────────────
 
 function assessSeaState(maxWaveFt: number, maxGustKnots: number): MarineDaily['seaState'] {

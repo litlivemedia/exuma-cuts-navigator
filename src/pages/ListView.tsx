@@ -1,5 +1,5 @@
 import type { CutStatus } from '../types/cut.ts'
-import type { MarineDaily } from '../types/marine.ts'
+import type { MarineDaily, MarineHourly } from '../types/marine.ts'
 import { CutCard } from '../components/cuts/CutCard.tsx'
 import { WeatherBriefing } from '../components/weather/WeatherBriefing.tsx'
 
@@ -7,10 +7,12 @@ export function ListView({
   statuses,
   onSelect,
   dailyForecasts,
+  marineData,
 }: {
   statuses: CutStatus[]
   onSelect: (id: string) => void
   dailyForecasts: MarineDaily[]
+  marineData: MarineHourly[]
 }) {
   const exumaCuts = statuses.filter((s) => s.cut.group === 'exuma')
   const southernCuts = statuses.filter((s) => s.cut.group === 'southern')
@@ -73,6 +75,7 @@ export function ListView({
               <CutCard
                 key={s.cut.id}
                 status={s}
+                marineData={marineData}
                 onSelect={() => onSelect(s.cut.id)}
               />
             ))}
@@ -98,6 +101,7 @@ export function ListView({
               <CutCard
                 key={s.cut.id}
                 status={s}
+                marineData={marineData}
                 onSelect={() => onSelect(s.cut.id)}
               />
             ))}
@@ -123,6 +127,7 @@ export function ListView({
               <CutCard
                 key={s.cut.id}
                 status={s}
+                marineData={marineData}
                 onSelect={() => onSelect(s.cut.id)}
               />
             ))}
