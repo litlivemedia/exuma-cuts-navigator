@@ -70,12 +70,6 @@ export function CutDetail({
     hazardous: { dot: 'bg-red-500',     label: 'Hazardous', text: 'text-red-600' },
   }[status.safetyLevel]
 
-  const windText = `${status.windDirectionCardinal} ${Math.round(status.windSpeedKnots)}kts`
-  const gustText =
-    status.windGustKnots > status.windSpeedKnots + 5
-      ? ` g${Math.round(status.windGustKnots)}`
-      : ''
-
   // Wave data (area-wide, closest hour)
   const wave = getMarineAtTime(marineData, now)
 
@@ -161,65 +155,79 @@ export function CutDetail({
         </p>
       </div>
 
-      {/* ── Wind (inline) ── */}
+      {/* ── Conditions Summary ── */}
       <div className="px-5 py-3">
-        <div className="flex items-center justify-between text-[13px]">
-          <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">Wind</span>
-          <span className={isOpposing ? 'font-medium text-red-600' : 'text-slate-500'}>
-            {windText}{gustText}
-            {isOpposing && <span className="ml-1.5 text-red-500">opposing</span>}
-          </span>
-        </div>
-        {isOpposing && (
-          <p className="text-[13px] text-red-500/80 mt-1.5 leading-relaxed">
-            Wind from {status.windDirectionCardinal} is opposing the{' '}
-            {status.tideDirection === 'ebbing' ? 'eastward ebb' : 'westward flood'} current.
-            Expect steep, confused seas in the cut.
+        <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-2">
+          Current Conditions
+        </h3>
+        <div className="text-[13px] text-slate-600 leading-relaxed space-y-1.5">
+          {/* Tide & Current */}
+          <p>
+            {status.tideDirection === 'slack' ? (
+              <>The tide is at <span className="font-medium text-emerald-600">slack water</span> — minimal current, ideal for transit.</>
+            ) : (
+              <>The tide is <span className="font-medium">{status.tideDirection === 'flooding' ? 'flooding' : 'ebbing'}</span> with
+              a {status.currentSpeedKnots.toFixed(1)}-knot current flowing {status.tideDirection === 'flooding' ? 'westward onto the bank' : 'eastward into Exuma Sound'}.
+              Tide height is {status.heightFt.toFixed(1)} ft{depth != null && <>, giving an estimated depth of <span className={`font-medium ${depthColor}`}>{depth.toFixed(1)} feet</span></>}.</>
+            )}
           </p>
-        )}
-      </div>
 
-      {/* ── Waves (inline) ── */}
-      {wave && wave.waveHeightFt > 0 && (
-        <div className="px-5 py-3">
-          <div className="flex items-center justify-between text-[13px]">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">Waves</span>
-            <span className="text-slate-500">
-              {wave.waveHeightFt.toFixed(1)}ft {degreesToCardinal(wave.waveDirectionDeg)} · {wave.wavePeriodSec.toFixed(0)}s
-            </span>
-          </div>
-          {(wave.swellHeightFt > 0.3 || wave.windWaveHeightFt > 0.3) && (
-            <div className="flex items-center justify-between text-[13px] mt-1.5">
-              <span className="text-slate-300">Breakdown</span>
-              <span className="text-slate-400">
-                {wave.windWaveHeightFt > 0.3 && `Wind ${wave.windWaveHeightFt.toFixed(1)}ft`}
-                {wave.windWaveHeightFt > 0.3 && wave.swellHeightFt > 0.3 && ' · '}
-                {wave.swellHeightFt > 0.3 && `Swell ${wave.swellHeightFt.toFixed(1)}ft`}
+          {/* Wind */}
+          <p>
+            Winds are from the {status.windDirectionCardinal} at {Math.round(status.windSpeedKnots)} knots{status.windGustKnots > status.windSpeedKnots + 5 && <>, gusting to {Math.round(status.windGustKnots)}</>}.{' '}
+            {isOpposing ? (
+              <span className="text-red-600 font-medium">
+                This is opposing the {status.tideDirection === 'ebbing' ? 'eastward ebb' : 'westward flood'} current — expect steep, confused seas in the cut.
               </span>
-            </div>
+            ) : status.windSpeedKnots < 10 ? (
+              'Light winds — favorable for transit.'
+            ) : status.windSpeedKnots < 15 ? (
+              'Moderate winds — manageable in most conditions.'
+            ) : (
+              'Strong winds — use caution even at slack.'
+            )}
+          </p>
+
+          {/* Waves */}
+          {wave && wave.waveHeightFt > 0 && (
+            <p>
+              Seas are {wave.waveHeightFt.toFixed(1)} feet from the {degreesToCardinal(wave.waveDirectionDeg)} with
+              a {wave.wavePeriodSec.toFixed(0)}-second period
+              {wave.swellHeightFt > 0.3 && wave.windWaveHeightFt > 0.3
+                ? ` (${wave.windWaveHeightFt.toFixed(1)}ft wind waves, ${wave.swellHeightFt.toFixed(1)}ft swell)`
+                : wave.swellHeightFt > 0.3
+                  ? `, mostly swell`
+                  : wave.windWaveHeightFt > 0.3
+                    ? `, mostly wind-driven`
+                    : ''
+              }.{' '}
+              {wave.wavePeriodSec < 5
+                ? 'Short period chop — uncomfortable but manageable at slack.'
+                : wave.wavePeriodSec < 8
+                  ? 'Moderate period — typical trade wind seas.'
+                  : 'Longer period swell — watch for shoaling in the cut.'}
+            </p>
           )}
         </div>
-      )}
 
-      {/* ── Safety Notes ── */}
-      {status.safetyReasons.length > 0 && (
-        <div className="px-5 py-2">
-          {status.safetyReasons.map((r, i) => (
-            <p
-              key={i}
-              className={`text-[13px] leading-relaxed ${
-                status.safetyLevel === 'hazardous'
-                  ? 'text-red-600'
-                  : status.safetyLevel === 'caution'
-                    ? 'text-amber-600'
-                    : 'text-slate-500'
-              }`}
-            >
-              {r}
-            </p>
-          ))}
-        </div>
-      )}
+        {/* Safety callout */}
+        {status.safetyReasons.length > 0 && (
+          <div className={`mt-3 rounded-lg px-3 py-2 ${
+            isHazardous ? 'bg-red-50' : isCaution ? 'bg-amber-50' : 'bg-slate-50'
+          }`}>
+            {status.safetyReasons.map((r, i) => (
+              <p
+                key={i}
+                className={`text-[13px] leading-relaxed ${
+                  isHazardous ? 'text-red-700' : isCaution ? 'text-amber-700' : 'text-slate-600'
+                }`}
+              >
+                {r}
+              </p>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* ── Divider ── */}
       <div className="mx-5 border-t border-slate-100" />

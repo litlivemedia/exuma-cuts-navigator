@@ -174,24 +174,22 @@ function WindowRow({
         </span>
       </div>
 
-      {/* Row 2: Compact details */}
-      <div className="mt-1 text-[13px] text-slate-400">
-        {details.join(' · ')}
-        {w.factors.windOpposing && <span className="text-red-500 ml-1">opposing</span>}
-        {!w.factors.daylight && <span className="text-slate-300 ml-1.5">dark</span>}
+      {/* Row 2: Conditions sentence */}
+      <p className="mt-1 text-[13px] text-slate-400 leading-relaxed">
+        {w.type === 'H' ? 'High' : 'Low'} slack
+        {w.depthFt != null && <> · {w.depthFt.toFixed(1)} ft depth</>}
+        {' · '}{w.windCardinal} {Math.round(w.windSpeedKnots)}{gustSuffix}kts
+        {w.factors.windOpposing && <span className="text-red-500"> opposing</span>}
+        {wave && wave.waveHeightFt > 0 && (
+          <> · {wave.waveHeightFt.toFixed(1)}ft seas {degreesToCardinal(wave.waveDirectionDeg)} ({wave.wavePeriodSec.toFixed(0)}s)</>
+        )}
+        {!w.factors.daylight && <span className="text-slate-300"> · dark</span>}
         {w.confidence !== 'high' && (
-          <span className="text-slate-300 ml-1.5">
+          <span className="text-slate-300 ml-0.5">
             {w.confidence === 'good' ? '~' : '?'}
           </span>
         )}
-      </div>
-
-      {/* Row 3: Waves */}
-      {wave && wave.waveHeightFt > 0 && (
-        <div className="mt-0.5 text-[13px] text-slate-300">
-          Waves {wave.waveHeightFt.toFixed(1)}ft {degreesToCardinal(wave.waveDirectionDeg)} · {wave.wavePeriodSec.toFixed(0)}s
-        </div>
-      )}
+      </p>
     </div>
   )
 }
