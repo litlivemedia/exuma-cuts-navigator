@@ -230,6 +230,7 @@ export function CutDetail({
           cut={status.cut}
           nassauTides={nassauTides}
           windData={windData}
+          marineData={marineData}
           now={now}
         />
       </div>

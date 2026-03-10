@@ -2,8 +2,11 @@ import { useMemo } from 'react'
 import { format } from 'date-fns'
 import type { HiLo } from '../../types/tide.ts'
 import type { WindHourly } from '../../types/wind.ts'
+import type { MarineHourly } from '../../types/marine.ts'
 import type { CutDefinition } from '../../types/cut.ts'
 import { scoreTransitWindows, type TransitDay, type TransitWindow } from '../../services/transitScorer.ts'
+import { getMarineAtTime } from '../../services/marine.ts'
+import { degreesToCardinal } from '../../services/wind.ts'
 
 function scoreLabel(score: number): string {
   if (score >= 9) return 'Ideal'
@@ -17,11 +20,13 @@ export function TransitPlanner({
   cut,
   nassauTides,
   windData,
+  marineData,
   now,
 }: {
   cut: CutDefinition
   nassauTides: HiLo[]
   windData: WindHourly[]
+  marineData: MarineHourly[]
   now: Date
 }) {
   const days = useMemo(
@@ -53,7 +58,7 @@ export function TransitPlanner({
         ) : (
           <div className="mt-4 space-y-5">
             {days.map((day, i) => (
-              <DaySection key={day.label} day={day} overallBest={overallBest} isFirst={i === 0} />
+              <DaySection key={day.label} day={day} overallBest={overallBest} isFirst={i === 0} marineData={marineData} />
             ))}
           </div>
         )}
@@ -71,10 +76,12 @@ function DaySection({
   day,
   overallBest,
   isFirst,
+  marineData,
 }: {
   day: TransitDay
   overallBest: TransitWindow | null
   isFirst: boolean
+  marineData: MarineHourly[]
 }) {
   if (day.windows.length === 0) {
     return (
@@ -106,7 +113,7 @@ function DaySection({
       </div>
       <div className="space-y-2">
         {day.windows.map((w, i) => (
-          <WindowRow key={i} window={w} isBest={overallBest === w} />
+          <WindowRow key={i} window={w} isBest={overallBest === w} marineData={marineData} />
         ))}
       </div>
     </div>
@@ -116,9 +123,11 @@ function DaySection({
 function WindowRow({
   window: w,
   isBest,
+  marineData,
 }: {
   window: TransitWindow
   isBest: boolean
+  marineData: MarineHourly[]
 }) {
   const label = scoreLabel(w.score)
   const isGood = w.score >= 7
@@ -137,6 +146,9 @@ function WindowRow({
   const gustSuffix =
     w.windGustKnots > w.windSpeedKnots + 5 ? `g${Math.round(w.windGustKnots)}` : ''
   details.push(`${w.windCardinal} ${Math.round(w.windSpeedKnots)}${gustSuffix}kts`)
+
+  // Wave at this window time
+  const wave = getMarineAtTime(marineData, w.time)
 
   return (
     <div
@@ -173,6 +185,13 @@ function WindowRow({
           </span>
         )}
       </div>
+
+      {/* Row 3: Waves */}
+      {wave && wave.waveHeightFt > 0 && (
+        <div className="mt-0.5 text-[13px] text-slate-300">
+          Waves {wave.waveHeightFt.toFixed(1)}ft {degreesToCardinal(wave.waveDirectionDeg)} · {wave.wavePeriodSec.toFixed(0)}s
+        </div>
+      )}
     </div>
   )
 }
