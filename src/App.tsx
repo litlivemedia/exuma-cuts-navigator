@@ -77,18 +77,24 @@ function App() {
     <div className="flex flex-col min-h-screen min-h-[100dvh] bg-sky-50">
       {/* Header */}
       <header className="bg-sky-900 text-white pl-4 pr-6 pt-3 pb-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {/* Compass rose icon */}
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="text-sky-300 flex-shrink-0">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-            <polygon points="12,2.5 13.5,10 12,8 10.5,10" fill="currentColor" opacity="0.9" />
-            <polygon points="12,21.5 10.5,14 12,16 13.5,14" fill="currentColor" opacity="0.4" />
-            <polygon points="2.5,12 10,10.5 8,12 10,13.5" fill="currentColor" opacity="0.4" />
-            <polygon points="21.5,12 14,13.5 16,12 14,10.5" fill="currentColor" opacity="0.4" />
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+            <circle cx="12" cy="12" r="10" stroke="#7dd3fc" strokeWidth="1" opacity="0.5" />
+            <circle cx="12" cy="12" r="6.5" stroke="#7dd3fc" strokeWidth="0.5" opacity="0.3" />
+            {/* N — red */}
+            <polygon points="12,2 13.8,10 12,7.5 10.2,10" fill="#f87171" />
+            {/* S — white */}
+            <polygon points="12,22 10.2,14 12,16.5 13.8,14" fill="#e2e8f0" opacity="0.5" />
+            {/* E — white */}
+            <polygon points="22,12 14,13.8 16.5,12 14,10.2" fill="#e2e8f0" opacity="0.5" />
+            {/* W — white */}
+            <polygon points="2,12 10,10.2 7.5,12 10,13.8" fill="#e2e8f0" opacity="0.5" />
+            <circle cx="12" cy="12" r="1.2" fill="#fbbf24" />
           </svg>
           <div>
-            <h1 className="text-lg font-bold tracking-tight">The Cut Navigator</h1>
-            <p className="text-sky-300/80 text-[11px] -mt-0.5 tracking-wide uppercase">Exumas &amp; Ragged Islands</p>
+            <h1 className="text-xl font-bold tracking-tight">The Cut Navigator</h1>
+            <p className="text-sky-300 text-xs tracking-wide uppercase">Exumas &amp; Ragged Islands</p>
           </div>
         </div>
         <p className="text-sky-300 text-xs mt-1">
