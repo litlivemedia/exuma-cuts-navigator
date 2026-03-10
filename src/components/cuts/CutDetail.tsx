@@ -81,25 +81,33 @@ export function CutDetail({
           ? 'border-t-[3px] border-t-amber-500'
           : ''
     }`}>
-      {/* ── Slim Header ── */}
-      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-slate-100">
-        <div className="px-5 pt-4 pb-3">
+      {/* ── Header ── */}
+      <div className="sticky top-0 z-10 bg-sky-900 text-white">
+        <div className="px-5 pt-3 pb-3 flex items-center gap-3">
           <button
             onClick={onBack}
-            className="text-sky-600 text-sm font-medium active:text-sky-800 -ml-1"
+            className="text-sky-300 text-sm font-medium active:text-white flex items-center gap-1"
           >
-            &larr; All Cuts
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+            All Cuts
           </button>
-          <div className="flex items-center justify-between mt-1">
-            <h2 className="text-[17px] font-semibold text-slate-900 tracking-tight">
-              {status.cut.name}
-            </h2>
-            <span className={`flex items-center gap-1.5 text-xs font-medium ${safetyCfg.text}`}>
-              <span className={`w-2 h-2 rounded-full ${safetyCfg.dot}`} />
-              {safetyCfg.label}
-            </span>
-          </div>
-          <p className="text-[13px] text-slate-400 mt-0.5">
+          <div className="flex-1" />
+          <span className={`flex items-center gap-1.5 text-xs font-medium ${
+            status.safetyLevel === 'safe' ? 'text-emerald-400'
+              : status.safetyLevel === 'caution' ? 'text-amber-400'
+                : 'text-red-400'
+          }`}>
+            <span className={`w-2 h-2 rounded-full ${safetyCfg.dot}`} />
+            {safetyCfg.label}
+          </span>
+        </div>
+        <div className="px-5 pb-3">
+          <h2 className="text-[19px] font-semibold tracking-tight">
+            {status.cut.name}
+          </h2>
+          <p className="text-[13px] text-sky-300 mt-0.5">
             Offset: {status.cut.offsetMinutes > 0 ? '+' : ''}{status.cut.offsetMinutes} min vs Nassau
           </p>
         </div>

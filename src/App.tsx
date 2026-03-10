@@ -76,7 +76,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen min-h-[100dvh] bg-sky-50">
       {/* Header */}
-      <header className="bg-sky-900 text-white pl-4 pr-6 py-3">
+      <header className="bg-sky-900 text-white pl-4 pr-6 pt-3 pb-0">
         <h1 className="text-lg font-bold">Exumas & Ragged Islands Cuts</h1>
         <p className="text-sky-300 text-xs">
           {format(now, 'EEEE, MMM d')} &middot; {format(now, 'h:mm a')}
@@ -85,6 +85,27 @@ function App() {
           )}
         </p>
         <ShipwreckFact />
+
+        {/* Top tab bar */}
+        <nav className="flex mt-3 -mx-4 -mr-6">
+          {([
+            { id: 'list' as TabId, label: 'Cuts' },
+            { id: 'map' as TabId, label: 'Map' },
+            { id: 'settings' as TabId, label: 'Info' },
+          ]).map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
+                tab === t.id
+                  ? 'text-white border-b-2 border-white'
+                  : 'text-sky-300/70 border-b-2 border-transparent'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </nav>
       </header>
 
       {/* Offline banner */}
@@ -132,6 +153,7 @@ function App() {
         )}
       </main>
 
+      {/* Bottom nav kept for thumb-reach on mobile */}
       <BottomNav active={tab} onChange={setTab} />
     </div>
   )

@@ -153,26 +153,17 @@ export function CutCard({
           </div>
         )}
 
-        {/* ── Row 4: Suggested transit + chevron ── */}
-        {status.bestDaylightWindow && (
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[13px] text-sky-600">
-              Suggested {status.bestDaylightWindow.label}
-            </span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-300">
-              <path d="m9 18 6-6-6-6" />
-            </svg>
-          </div>
-        )}
-
-        {/* ── Chevron-only footer when no transit window ── */}
-        {!status.bestDaylightWindow && (
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-end">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-300">
-              <path d="m9 18 6-6-6-6" />
-            </svg>
-          </div>
-        )}
+        {/* ── Row 4: Suggested transit / tap hint + chevron ── */}
+        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+          <span className="text-[13px] text-sky-600">
+            {status.bestDaylightWindow
+              ? `Suggested ${status.bestDaylightWindow.label}`
+              : 'Tap for details & transit planning'}
+          </span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-300">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </div>
 
       </div>
     </button>
