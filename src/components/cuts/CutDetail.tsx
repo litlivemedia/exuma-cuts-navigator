@@ -3,13 +3,9 @@ import { format } from 'date-fns'
 import type { HiLo } from '../../types/tide.ts'
 import type { WindHourly } from '../../types/wind.ts'
 import type { CutStatus } from '../../types/cut.ts'
-import { SafetyBadge } from '../safety/SafetyBadge.tsx'
-import { WindIndicator } from '../wind/WindIndicator.tsx'
-import { CurrentStrength } from '../tide/CurrentStrength.tsx'
 import { TideCurve } from '../tide/TideCurve.tsx'
 import { TransitPlanner } from '../transit/TransitPlanner.tsx'
-import { ShipwreckFact } from '../fun/ShipwreckFact.tsx'
-import { applyOffset, getSlackWindows } from '../../services/tideCalculator.ts'
+import { applyOffset } from '../../services/tideCalculator.ts'
 
 export function CutDetail({
   status,
@@ -30,168 +26,227 @@ export function CutDetail({
   }, [status.cut.id])
 
   const adjusted = applyOffset(nassauTides, status.cut.offsetMinutes)
-  const slackWindows = getSlackWindows(adjusted)
 
-  // Show upcoming events for next 24h
+  // Upcoming events for next 24h
   const upcoming = adjusted.filter(
     (e) =>
       e.time.getTime() > now.getTime() &&
       e.time.getTime() < now.getTime() + 24 * 3600000
   )
 
+  // === Helpers (identical to CutCard.tsx) ===
+  const depth = status.depthNowFt
+  const isOpposing = status.isWindAgainstCurrent
+  const isHazardous = status.safetyLevel === 'hazardous'
+  const isCaution = status.safetyLevel === 'caution'
+
+  const dirLabel =
+    status.tideDirection === 'slack'
+      ? 'Slack'
+      : status.tideDirection === 'flooding'
+        ? '↑ Flooding'
+        : '↓ Ebbing'
+
+  const dirColor =
+    status.tideDirection === 'slack'
+      ? 'text-emerald-600'
+      : 'text-slate-500'
+
+  const depthColor =
+    depth != null && depth < 5
+      ? 'text-red-600'
+      : depth != null && depth < 6
+        ? 'text-amber-600'
+        : 'text-slate-900'
+
+  const safetyCfg = {
+    safe:      { dot: 'bg-emerald-500', label: 'Safe',      text: 'text-emerald-600' },
+    caution:   { dot: 'bg-amber-500',   label: 'Caution',   text: 'text-amber-600' },
+    hazardous: { dot: 'bg-red-500',     label: 'Hazardous', text: 'text-red-600' },
+  }[status.safetyLevel]
+
+  const windText = `${status.windDirectionCardinal} ${Math.round(status.windSpeedKnots)}kts`
+  const gustText =
+    status.windGustKnots > status.windSpeedKnots + 5
+      ? ` g${Math.round(status.windGustKnots)}`
+      : ''
+
   return (
-    <div className="pb-20">
-      {/* Header */}
-      <div className="sticky top-0 bg-sky-900 text-white pl-4 pr-6 py-3 z-10">
-        <button onClick={onBack} className="text-sky-200 text-sm mb-1 active:text-white">
-          &larr; All Cuts
-        </button>
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold">{status.cut.name}</h2>
-          <SafetyBadge level={status.safetyLevel} compact />
+    <div className={`min-h-screen bg-white ${
+      isOpposing && isHazardous
+        ? 'border-t-[3px] border-t-red-500'
+        : isOpposing && isCaution
+          ? 'border-t-[3px] border-t-amber-500'
+          : ''
+    }`}>
+      {/* ── Slim Header ── */}
+      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-slate-100">
+        <div className="px-5 pt-4 pb-3">
+          <button
+            onClick={onBack}
+            className="text-sky-600 text-sm font-medium active:text-sky-800 -ml-1"
+          >
+            &larr; All Cuts
+          </button>
+          <div className="flex items-center justify-between mt-1">
+            <h2 className="text-[17px] font-semibold text-slate-900 tracking-tight">
+              {status.cut.name}
+            </h2>
+            <span className={`flex items-center gap-1.5 text-xs font-medium ${safetyCfg.text}`}>
+              <span className={`w-2 h-2 rounded-full ${safetyCfg.dot}`} />
+              {safetyCfg.label}
+            </span>
+          </div>
+          <p className="text-[13px] text-slate-400 mt-0.5">
+            Offset: {status.cut.offsetMinutes > 0 ? '+' : ''}{status.cut.offsetMinutes} min vs Nassau
+          </p>
         </div>
-        <p className="text-sky-200 text-xs mt-0.5">
-          Offset: {status.cut.offsetMinutes > 0 ? '+' : ''}{status.cut.offsetMinutes} min vs Nassau
-        </p>
-        <ShipwreckFact />
       </div>
 
-      <div className="pl-4 pr-6 py-4 space-y-4">
-        {/* Safety reasons */}
-        <div className={`rounded-lg p-3 ${
-          status.safetyLevel === 'hazardous'
-            ? 'bg-red-50 border border-red-200'
-            : status.safetyLevel === 'caution'
-              ? 'bg-amber-50 border border-amber-200'
-              : 'bg-green-50 border border-green-200'
-        }`}>
-          {status.safetyReasons.map((r, i) => (
-            <p key={i} className="text-sm">{r}</p>
-          ))}
-        </div>
-
-        {/* Current status */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3">
-          <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
-            Current
-          </h3>
-          <CurrentStrength
-            speedKnots={status.currentSpeedKnots}
-            maxKnots={status.cut.maxCurrentKnots}
-            direction={status.tideDirection}
-          />
-          <div className="text-sm text-slate-600">
-            Tide height: {status.heightFt.toFixed(1)} ft
+      {/* ── Hero: Depth + Direction ── */}
+      <div className="px-5 pt-6 pb-2">
+        <div className="flex items-baseline justify-between">
+          <div className="flex items-baseline gap-1">
+            {depth != null ? (
+              <>
+                <span className={`text-[28px] font-light tracking-tight leading-none ${depthColor}`}>
+                  {depth.toFixed(1)}
+                </span>
+                <span className={`text-sm font-medium ${depthColor === 'text-slate-900' ? 'text-slate-400' : depthColor}`}>
+                  ft
+                </span>
+              </>
+            ) : (
+              <span className="text-[28px] font-light tracking-tight leading-none text-slate-300">
+                —
+              </span>
+            )}
+          </div>
+          <div className="text-right">
+            <span className={`text-[15px] font-medium ${dirColor}`}>
+              {dirLabel}
+            </span>
+            {status.tideDirection !== 'slack' && (
+              <span className="text-sm text-slate-400 ml-1.5">
+                {status.currentSpeedKnots.toFixed(1)} kts
+              </span>
+            )}
           </div>
         </div>
 
-        {/* Wind */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-2">
-          <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
-            Wind
-          </h3>
-          <WindIndicator
-            speedKnots={status.windSpeedKnots}
-            gustKnots={status.windGustKnots}
-            directionDeg={status.windDirectionDeg}
-            cardinal={status.windDirectionCardinal}
-            isOpposing={status.isWindAgainstCurrent}
-          />
-          {status.isWindAgainstCurrent && (
-            <p className="text-xs text-red-700 mt-1">
-              Wind from {status.windDirectionCardinal} is opposing the{' '}
-              {status.tideDirection === 'ebbing' ? 'eastward ebb' : 'westward flood'} current.
-              Expect steep, confused seas in the cut.
-            </p>
-          )}
-        </div>
+        {/* Depth bar (depth-critical cuts only) */}
+        {status.cut.depthCritical && depth != null && (
+          <div className="mt-2.5">
+            <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${
+                  depth < 5 ? 'bg-red-400' : depth < 6 ? 'bg-amber-400' : 'bg-emerald-400'
+                }`}
+                style={{ width: `${Math.min(100, (depth / 10) * 100)}%` }}
+              />
+            </div>
+          </div>
+        )}
 
-        {/* ═══ TRANSIT PLANNER ═══ */}
+        <p className="text-[13px] text-slate-400 mt-2">
+          Tide height: {status.heightFt.toFixed(1)} ft
+        </p>
+      </div>
+
+      {/* ── Wind (inline) ── */}
+      <div className="px-5 py-3">
+        <div className="flex items-center justify-between text-[13px]">
+          <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">Wind</span>
+          <span className={isOpposing ? 'font-medium text-red-600' : 'text-slate-500'}>
+            {windText}{gustText}
+            {isOpposing && <span className="ml-1.5 text-red-500">opposing</span>}
+          </span>
+        </div>
+        {isOpposing && (
+          <p className="text-[13px] text-red-500/80 mt-1.5 leading-relaxed">
+            Wind from {status.windDirectionCardinal} is opposing the{' '}
+            {status.tideDirection === 'ebbing' ? 'eastward ebb' : 'westward flood'} current.
+            Expect steep, confused seas in the cut.
+          </p>
+        )}
+      </div>
+
+      {/* ── Safety Notes ── */}
+      {status.safetyReasons.length > 0 && (
+        <div className="px-5 py-2">
+          {status.safetyReasons.map((r, i) => (
+            <p
+              key={i}
+              className={`text-[13px] leading-relaxed ${
+                status.safetyLevel === 'hazardous'
+                  ? 'text-red-600'
+                  : status.safetyLevel === 'caution'
+                    ? 'text-amber-600'
+                    : 'text-slate-500'
+              }`}
+            >
+              {r}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {/* ── Divider ── */}
+      <div className="mx-5 border-t border-slate-100" />
+
+      {/* ── Transit Planner ── */}
+      <div className="px-5 pt-4">
         <TransitPlanner
           cut={status.cut}
           nassauTides={nassauTides}
           windData={windData}
           now={now}
         />
+      </div>
 
-        {/* Tide curve */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
-          <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">
-            Tide Curve
-          </h3>
-          <TideCurve
-            nassauTides={nassauTides}
-            offsetMinutes={status.cut.offsetMinutes}
-            now={now}
-          />
-          <p className="text-xs text-slate-400 mt-1">
-            Green bands = slack water windows. Red line = now.
-          </p>
-        </div>
+      {/* ── Tide Curve ── */}
+      <div className="px-5 pt-4">
+        <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3">
+          Tide Curve
+        </h3>
+        <TideCurve
+          nassauTides={nassauTides}
+          offsetMinutes={status.cut.offsetMinutes}
+          now={now}
+        />
+        <p className="text-[11px] text-slate-300 mt-1.5">
+          Green = slack water. Red line = now.
+        </p>
+      </div>
 
-        {/* Upcoming tides */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
-          <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">
-            Next 24 Hours
-          </h3>
-          <div className="space-y-2">
-            {upcoming.map((e, i) => (
-              <div key={i} className="flex justify-between text-sm">
-                <span className="text-slate-600">
-                  {e.type === 'H' ? 'High' : 'Low'} — {e.height.toFixed(1)} ft
-                </span>
-                <span className="text-slate-500">
-                  {format(e.time, 'h:mm a')}
-                </span>
-              </div>
-            ))}
-          </div>
+      {/* ── Upcoming Tides ── */}
+      <div className="px-5 pt-4">
+        <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3">
+          Upcoming Tides
+        </h3>
+        <div className="space-y-2.5">
+          {upcoming.map((e, i) => (
+            <div key={i} className="flex justify-between text-[13px]">
+              <span className="text-slate-600">
+                {e.type === 'H' ? 'High' : 'Low'} — {e.height.toFixed(1)} ft
+              </span>
+              <span className="text-slate-400">
+                {format(e.time, 'h:mm a')}
+              </span>
+            </div>
+          ))}
+          {upcoming.length === 0 && (
+            <p className="text-[13px] text-slate-300">No tide events in next 24 hours</p>
+          )}
         </div>
+      </div>
 
-        {/* Slack windows */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
-          <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">
-            Safe Transit Windows
-          </h3>
-          <div className="space-y-2">
-            {slackWindows
-              .filter((sw) => sw.end.getTime() > now.getTime())
-              .slice(0, 6)
-              .map((sw, i) => {
-                const isCurrent =
-                  now.getTime() >= sw.start.getTime() &&
-                  now.getTime() <= sw.end.getTime()
-                return (
-                  <div
-                    key={i}
-                    className={`flex justify-between text-sm px-2 py-1 rounded ${
-                      isCurrent ? 'bg-green-100 font-semibold text-green-800' : 'text-slate-600'
-                    }`}
-                  >
-                    <span>
-                      {sw.type === 'H' ? 'High' : 'Low'} slack
-                      {isCurrent && ' (NOW)'}
-                    </span>
-                    <span>
-                      {format(sw.start, 'h:mm')} – {format(sw.end, 'h:mm a')}
-                    </span>
-                  </div>
-                )
-              })}
-          </div>
-          <p className="text-xs text-slate-400 mt-2">
-            ~1 hour window centered on each high/low tide
-          </p>
-        </div>
-
-        {/* Notes */}
-        <div className="text-xs text-slate-400 p-2">
-          <p>{status.cut.notes}</p>
-          <p className="mt-2">
-            Offsets are estimates based on available data. Always assess
-            conditions visually before transiting any cut.
-          </p>
-        </div>
+      {/* ── Notes ── */}
+      <div className="px-5 pt-4 pb-24">
+        <p className="text-[11px] text-slate-300 leading-relaxed">{status.cut.notes}</p>
+        <p className="text-[11px] text-slate-300 leading-relaxed mt-2">
+          Offsets are estimates. Always assess conditions visually before transiting.
+        </p>
       </div>
     </div>
   )
