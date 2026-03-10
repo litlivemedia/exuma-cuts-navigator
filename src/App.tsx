@@ -77,8 +77,21 @@ function App() {
     <div className="flex flex-col min-h-screen min-h-[100dvh] bg-sky-50">
       {/* Header */}
       <header className="bg-sky-900 text-white pl-4 pr-6 pt-3 pb-0">
-        <h1 className="text-lg font-bold">Exumas & Ragged Islands Cuts</h1>
-        <p className="text-sky-300 text-xs">
+        <div className="flex items-center gap-2">
+          {/* Compass rose icon */}
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="text-sky-300 flex-shrink-0">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+            <polygon points="12,2.5 13.5,10 12,8 10.5,10" fill="currentColor" opacity="0.9" />
+            <polygon points="12,21.5 10.5,14 12,16 13.5,14" fill="currentColor" opacity="0.4" />
+            <polygon points="2.5,12 10,10.5 8,12 10,13.5" fill="currentColor" opacity="0.4" />
+            <polygon points="21.5,12 14,13.5 16,12 14,10.5" fill="currentColor" opacity="0.4" />
+          </svg>
+          <div>
+            <h1 className="text-lg font-bold tracking-tight">The Cut Navigator</h1>
+            <p className="text-sky-300/80 text-[11px] -mt-0.5 tracking-wide uppercase">Exumas &amp; Ragged Islands</p>
+          </div>
+        </div>
+        <p className="text-sky-300 text-xs mt-1">
           {format(now, 'EEEE, MMM d')} &middot; {format(now, 'h:mm a')}
           {!isOnline && (
             <span className="ml-2 text-amber-300">Offline</span>
