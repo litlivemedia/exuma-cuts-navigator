@@ -153,18 +153,23 @@ export function CutCard({
           </div>
         )}
 
-        {/* ── Row 4: Suggested transit / tap hint + chevron ── */}
-        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-          <span className="text-[13px] text-sky-600">
-            {status.bestDaylightWindow
-              ? `Suggested ${status.bestDaylightWindow.label}`
-              : 'Tap for details & transit planning'}
-          </span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-300">
-            <path d="m9 18 6-6-6-6" />
-          </svg>
-        </div>
+        {/* ── Suggested transit time ── */}
+        {status.bestDaylightWindow && (
+          <p className="mt-3 text-[13px] text-slate-400">
+            Suggested {status.bestDaylightWindow.label}
+          </p>
+        )}
 
+      </div>
+
+      {/* ── CTA footer ── */}
+      <div className="bg-sky-50 border-t border-sky-100 px-5 py-2.5 flex items-center justify-between">
+        <span className="text-[13px] font-medium text-sky-700">
+          View Details & Transit Plan
+        </span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-sky-400">
+          <path d="m9 18 6-6-6-6" />
+        </svg>
       </div>
     </button>
   )
