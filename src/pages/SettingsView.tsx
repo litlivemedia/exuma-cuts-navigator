@@ -69,9 +69,13 @@ export function SettingsView({
             Suggested time to transit.
           </p>
           <p>
-            <strong>Current vs. Tide</strong> = Current direction in a cut often reverses
-            30–60 minutes before the predicted high or low tide. Plan transits based
-            on observed current, not just tide times.
+            <strong>Current vs. Tide</strong> = The tide times shown in this app predict
+            when the water level peaks or bottoms out. But in a narrow cut, the current
+            can reverse direction 30–60 minutes before that happens. As the bank fills
+            up during a flood, it reaches a point where water starts draining back out
+            through the cut — even though the ocean side hasn't hit "high tide" yet.
+            The same thing happens in reverse at low tide. Bottom line: if you're timing
+            a transit, watch the water — the current may turn before the app says it will.
           </p>
           <p>
             <strong>Wind Opposing Current</strong> = wind blowing against the direction of
