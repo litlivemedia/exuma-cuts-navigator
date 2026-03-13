@@ -69,6 +69,11 @@ export function SettingsView({
             Suggested time to transit.
           </p>
           <p>
+            <strong>Current vs. Tide</strong> = Current direction in a cut often reverses
+            30–60 minutes before the predicted high or low tide. Plan transits based
+            on observed current, not just tide times.
+          </p>
+          <p>
             <strong>Wind Opposing Current</strong> = wind blowing against the direction of
             current flow, creating steep confused seas. Avoid transiting cuts when this
             warning is active, especially with wind over 15 knots.
