@@ -253,6 +253,18 @@ export const cuts: CutDefinition[] = [
   // Note: Raggeds face open ocean — tides run much closer to Nassau timing
   // than the Exuma chain. Offsets below are estimates; verify visually.
   {
+    id: 'water-cay-cut',
+    name: 'Water Cay Cut',
+    lat: 22.615,
+    lon: -75.860,
+    offsetMinutes: 10,
+    maxCurrentKnots: 2.5,
+    bearingDeg: 270,
+    mlwDepthFt: 7,
+    notes: 'Between Water Cay and Flamingo Cay in the northern Jumentos. Usable passage to the ocean side. Limited data — verify visually.',
+    group: 'raggeds',
+  },
+  {
     id: 'nurse-channel',
     name: 'Nurse Channel',
     lat: 22.517,
