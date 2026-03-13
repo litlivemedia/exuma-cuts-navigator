@@ -60,6 +60,15 @@ export function ListView({
         </div>
       )}
 
+      {/* ═══ CURRENT TIP ═══ */}
+      <div className="rounded-lg bg-amber-50/70 border border-amber-200/60 px-3 py-2.5 mb-1">
+        <p className="text-[11.5px] text-amber-800 leading-relaxed">
+          <span className="font-semibold">Heads up:</span> In tight cuts, the current can reverse
+          30–60 min <span className="font-medium">before</span> the predicted high or low tide.
+          Plan early and watch the water, not just the clock.
+        </p>
+      </div>
+
       {/* ═══ EXUMA CUTS ═══ */}
       {exumaCuts.length > 0 && (
         <div>
@@ -136,11 +145,6 @@ export function ListView({
       )}
       {/* ═══ DISCLAIMER ═══ */}
       <div className="mt-6 rounded-xl border border-amber-200/60 bg-amber-50/60 px-4 py-3 space-y-2">
-        <p className="text-[11px] text-amber-700 leading-relaxed">
-          <span className="font-semibold">Tip:</span> In tight cuts, the current often
-          reverses 30–60 min before the predicted high or low tide. Watch the water, not
-          just the clock.
-        </p>
         <p className="text-[11px] text-amber-700 leading-relaxed">
           <span className="font-semibold">Disclaimer:</span> All depths, currents, and transit suggestions are estimates based on
           NOAA predictions and calculated offsets. Not a substitute for local knowledge or
