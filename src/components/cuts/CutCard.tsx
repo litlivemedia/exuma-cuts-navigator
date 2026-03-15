@@ -148,19 +148,24 @@ export function CutCard({
           </div>
         )}
 
-        {/* ── Estimated Slack ── */}
+        {/* ── CutNav Slack ── */}
         {status.estimatedSlackTime && status.minutesToEstSlack != null && (
-          <div className="mt-3 flex items-center gap-1.5 text-[13px]">
-            <span className="text-slate-400">Est. Slack</span>
-            <span className="font-medium text-indigo-600">
-              {format(status.estimatedSlackTime, 'h:mm a')}
-            </span>
-            {status.minutesToEstSlack > 0 && (
-              <span className="text-slate-300">{fmtDur(status.minutesToEstSlack)}</span>
-            )}
-            {status.minutesToEstSlack <= 0 && status.minutesToEstSlack > -30 && (
-              <span className="text-emerald-500 font-medium">now</span>
-            )}
+          <div className="mt-3 text-[13px]">
+            <div className="flex items-center gap-1.5">
+              <span className="text-slate-400">CutNav Slack</span>
+              <span className="font-medium text-indigo-600">
+                {format(status.estimatedSlackTime, 'h:mm a')}
+              </span>
+              {status.minutesToEstSlack > 0 && (
+                <span className="text-slate-300">{fmtDur(status.minutesToEstSlack)}</span>
+              )}
+              {status.minutesToEstSlack <= 0 && status.minutesToEstSlack > -30 && (
+                <span className="text-emerald-500 font-medium">now</span>
+              )}
+            </div>
+            <p className="text-[11px] text-slate-300 mt-0.5 italic">
+              based on an absurdly complex and perhaps completely wrong algorithm
+            </p>
           </div>
         )}
 
@@ -175,9 +180,19 @@ export function CutCard({
 
       {/* ── CTA footer ── */}
       <div className="bg-sky-50 border-t border-sky-100 px-5 py-2.5 flex items-center justify-between">
-        <span className="text-[13px] font-medium text-sky-700">
-          View Details & Transit Plan
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-[13px] font-medium text-sky-700">
+            View Details
+          </span>
+          <span className="text-slate-300">·</span>
+          <span className="flex items-center gap-1 text-[12px] text-indigo-500">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>
+            Report Transit
+          </span>
+        </div>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-sky-400">
           <path d="m9 18 6-6-6-6" />
         </svg>
