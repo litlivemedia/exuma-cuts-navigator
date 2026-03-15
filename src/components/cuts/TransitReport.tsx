@@ -43,7 +43,7 @@ export function TransitReport({ cut, onClose }: TransitReportProps) {
     formData.append('notes', notes)
 
     try {
-      const res = await fetch('/', {
+      const res = await fetch('/.netlify/functions/transit-report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData.toString(),
