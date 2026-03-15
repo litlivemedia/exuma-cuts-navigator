@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import type { HiLo } from '../../types/tide.ts'
 import type { WindHourly } from '../../types/wind.ts'
@@ -6,6 +6,7 @@ import type { MarineHourly } from '../../types/marine.ts'
 import type { CutStatus } from '../../types/cut.ts'
 import { TideCurve } from '../tide/TideCurve.tsx'
 import { TransitPlanner } from '../transit/TransitPlanner.tsx'
+import { TransitReport } from './TransitReport.tsx'
 import { applyOffset } from '../../services/tideCalculator.ts'
 import { getMarineAtTime } from '../../services/marine.ts'
 import { degreesToCardinal } from '../../services/wind.ts'
@@ -25,6 +26,8 @@ export function CutDetail({
   now: Date
   onBack: () => void
 }) {
+  const [showReport, setShowReport] = useState(false)
+
   // Scroll to top when entering detail view
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -286,6 +289,25 @@ export function CutDetail({
             <p className="text-[13px] text-slate-300">No tide events in next 24 hours</p>
           )}
         </div>
+      </div>
+
+      {/* ── Report Transit ── */}
+      <div className="px-5 pt-4">
+        <div className="mx-0 border-t border-slate-100 mb-4" />
+        {showReport ? (
+          <TransitReport cut={status.cut} onClose={() => setShowReport(false)} />
+        ) : (
+          <button
+            onClick={() => setShowReport(true)}
+            className="w-full flex items-center justify-center gap-2 bg-indigo-50 text-indigo-700 font-medium text-[14px] py-3 rounded-xl active:bg-indigo-100 transition-colors"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>
+            Report Transit Observation
+          </button>
+        )}
       </div>
 
       {/* ── Notes ── */}

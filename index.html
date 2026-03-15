@@ -10,6 +10,21 @@
     <title>The Cut Navigator — Exumas & Ragged Islands</title>
   </head>
   <body>
+    <!-- Netlify Forms: hidden form for bot detection (SPA) -->
+    <form name="transit-report" netlify netlify-honeypot="bot-field" hidden>
+      <input name="bot-field" />
+      <input name="cutId" />
+      <input name="cutName" />
+      <input name="transitTime" />
+      <input name="direction" />
+      <input name="currentStrength" />
+      <input name="currentDirection" />
+      <input name="slackObserved" />
+      <input name="depth" />
+      <input name="windConditions" />
+      <input name="seaConditions" />
+      <input name="notes" />
+    </form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
