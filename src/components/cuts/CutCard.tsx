@@ -148,6 +148,22 @@ export function CutCard({
           </div>
         )}
 
+        {/* ── Estimated Slack ── */}
+        {status.estimatedSlackTime && status.minutesToEstSlack != null && (
+          <div className="mt-3 flex items-center gap-1.5 text-[13px]">
+            <span className="text-slate-400">Est. Slack</span>
+            <span className="font-medium text-indigo-600">
+              {format(status.estimatedSlackTime, 'h:mm a')}
+            </span>
+            {status.minutesToEstSlack > 0 && (
+              <span className="text-slate-300">{fmtDur(status.minutesToEstSlack)}</span>
+            )}
+            {status.minutesToEstSlack <= 0 && status.minutesToEstSlack > -30 && (
+              <span className="text-emerald-500 font-medium">now</span>
+            )}
+          </div>
+        )}
+
         {/* ── Suggested transit time ── */}
         {status.bestDaylightWindow && (
           <p className={`mt-3 text-[13px] font-medium ${safetyCfg.text}`}>

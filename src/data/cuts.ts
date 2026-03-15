@@ -13,6 +13,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 15,
     notes: 'Northernmost major cut. Wide, deep, and one of the least turbulent passages in the chain. Standard first entry from Nassau.',
     group: 'exuma',
+    slackLeadMinutes: 10, // Very wide, buffered by shallows
   },
   {
     id: 'highbourne-cay',
@@ -25,6 +26,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 8,
     notes: 'Near Highbourne Cay Marina; strong tidal currents. NGA-charted.',
     group: 'exuma',
+    slackLeadMinutes: 30, // Moderate width, feeds open bank
   },
   {
     id: 'wax-cay',
@@ -37,6 +39,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 10,
     notes: 'Northern boundary of Exuma Cays Land and Sea Park. NGA-charted.',
     group: 'exuma',
+    slackLeadMinutes: 30, // Moderate width, feeds open bank
   },
   {
     id: 'little-cistern',
@@ -49,6 +52,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 6,
     notes: 'Near Cistern Cay within the Land and Sea Park; limited published data.',
     group: 'exuma',
+    slackLeadMinutes: 45, // Narrow, feeds open bank
   },
   {
     id: 'wide-opening',
@@ -61,6 +65,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 15,
     notes: 'One of the least turbulent passages in the chain. North of Warderick Wells.',
     group: 'exuma',
+    slackLeadMinutes: 10, // Very wide opening, buffered
   },
   {
     id: 'waderick-wells',
@@ -73,6 +78,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 10,
     notes: 'Near Exuma Cays Land and Sea Park HQ. Described as wide, deep, and straight.',
     group: 'exuma',
+    slackLeadMinutes: 15, // Wide and deep, some buffering
   },
   {
     id: 'halls-pond',
@@ -85,6 +91,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 6,
     notes: "Within the Land and Sea Park. Rocky bar at entrance with large rock awash at low tide.",
     group: 'exuma',
+    slackLeadMinutes: 45, // Narrow with rocky restrictions, feeds bank
   },
   {
     id: 'obriens',
@@ -97,6 +104,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 6,
     notes: "Near O'Brien's Cay and Cambridge Cay; dive sites nearby.",
     group: 'exuma',
+    slackLeadMinutes: 40, // Moderate width, feeds bank
   },
   {
     id: 'conch-cut',
@@ -109,6 +117,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 10,
     notes: 'Southern boundary of the Land and Sea Park at Bell Island. Very strong current (4-6 kts) — must go WITH the current, not against it.',
     group: 'exuma',
+    slackLeadMinutes: 45, // Strong current = narrow channel feeding bank
   },
   {
     id: 'gaulin',
@@ -121,6 +130,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 6,
     notes: 'Near Gaulin Cay; central Exumas.',
     group: 'exuma',
+    slackLeadMinutes: 45, // Narrow, feeds open bank
   },
   {
     id: 'dotham',
@@ -133,6 +143,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 8,
     notes: 'Access to Black Point Settlement. Can be dangerous — "White Horses" breaking seas when east wind opposes ebb. Avoid in strong east winds.',
     group: 'exuma',
+    slackLeadMinutes: 55, // 400ft narrow, feeds open bank — observed 57 min lead
   },
   {
     id: 'farmers',
@@ -145,6 +156,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 10,
     notes: 'Wide and deep but strong currents. Rough in east swell vs ebb.',
     group: 'exuma',
+    slackLeadMinutes: 30, // Wide but feeds open bank
   },
   {
     id: 'galliot',
@@ -157,6 +169,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 8,
     notes: 'Can be turbulent. Standard exit for deep-draft boats heading south.',
     group: 'exuma',
+    slackLeadMinutes: 10, // 600ft wide, buffered by sandbars — observed ~7.5 min lead
   },
   {
     id: 'cave-cay',
@@ -169,6 +182,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 12,
     notes: 'Preferred by some over Galliot — deeper rock sill means less turbulence. Cave Cay Marina nearby with fuel. Vessels >5.25ft draft may need tide to clear a bump at entrance.',
     group: 'exuma',
+    slackLeadMinutes: 15, // Wide, deep, buffered similar to Galliot
   },
   {
     id: 'rudder-cut',
@@ -181,6 +195,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 8,
     notes: 'Strong currents south of Musha Cay.',
     group: 'exuma',
+    slackLeadMinutes: 60, // 172ft bottleneck, restricted — observed 60 min lead
   },
 
   // === Southern Exumas (Lee Stocking to George Town) ===
@@ -195,6 +210,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 10,
     notes: 'Standard entry to Lee Stocking Island anchorage. Strong surge and current. Shallows (6ft) behind Lee Stocking on falling tide.',
     group: 'southern',
+    slackLeadMinutes: 45, // Direct channel to open bank
   },
   {
     id: 'rat-cay',
@@ -207,6 +223,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 8,
     notes: 'Alternative Lee Stocking access. N-S oriented — favorable in east winds when other cuts are rough. Narrow between rocks with swift current.',
     group: 'southern',
+    slackLeadMinutes: 50, // Narrow between rocks, feeds bank
   },
   {
     id: 'conch-cay-cut',
@@ -219,6 +236,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 10,
     notes: 'Primary entrance to Elizabeth Harbour / George Town from Exuma Sound. Reef navigation required — transit in good visibility only. Not to be confused with Conch Cut at Bell Island.',
     group: 'southern',
+    slackLeadMinutes: 20, // Opens into large Elizabeth Harbour, semi-enclosed
   },
   {
     id: 'man-of-war-channel',
@@ -231,6 +249,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 8,
     notes: 'South entrance to Elizabeth Harbour past Stocking Island. Leads to Three Fathom Channel inside the harbour. Easier approach than Conch Cay Cut in some conditions.',
     group: 'southern',
+    slackLeadMinutes: 20, // Opens into Elizabeth Harbour, semi-enclosed
   },
 
   // === Off to The Raggeds ===
@@ -246,6 +265,7 @@ export const cuts: CutDefinition[] = [
     notes: 'Shallow cut — arrive before high tide. Saves 20+ nm vs Comer\'s. Shallow draft only. Anchor at Goat Cay to assess conditions before committing.',
     group: 'raggeds',
     depthCritical: true,
+    slackLeadMinutes: 45, // Shallow, narrow, feeds bank
   },
   {
     id: 'comers-channel',
@@ -259,6 +279,7 @@ export const cuts: CutDefinition[] = [
     notes: 'Deeper route to the Raggeds. Clear water over white sand. Suitable for deeper draft vessels. ~100nm from Thompson Bay to Duncan Town.',
     group: 'raggeds',
     depthCritical: true,
+    slackLeadMinutes: 30, // Wide channel, but feeds bank
   },
 
   // === Within The Raggeds (Jumentos Cays, north to south) ===
@@ -275,6 +296,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 7,
     notes: 'Between Water Cay and Flamingo Cay in the northern Jumentos. Usable passage to the ocean side. Limited data — verify visually.',
     group: 'raggeds',
+    slackLeadMinutes: 40, // Narrow Raggeds cut, open bank behind
   },
   {
     id: 'flamingo-cut',
@@ -287,6 +309,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 7,
     notes: 'Between Flamingo Cay and Buena Vista Cay. Named for the flamingos that frequent the area. Limited data — verify visually.',
     group: 'raggeds',
+    slackLeadMinutes: 40, // Narrow Raggeds cut
   },
   {
     id: 'melito-cut',
@@ -299,6 +322,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 7,
     notes: 'Near Melito Bank in the northern Jumentos. Limited data — verify visually.',
     group: 'raggeds',
+    slackLeadMinutes: 40, // Narrow Raggeds cut
   },
   {
     id: 'nurse-channel',
@@ -311,6 +335,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 8,
     notes: 'Mid-chain passage between Channel Cay and Nurse Cay. Tide station data available — tides run close to Nassau timing. Limited data — verify visually.',
     group: 'raggeds',
+    slackLeadMinutes: 40, // Narrow Raggeds cut
   },
   {
     id: 'brigg-cut',
@@ -323,6 +348,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 7,
     notes: 'Near Brigg Cay in the mid-Jumentos. Limited data — verify visually.',
     group: 'raggeds',
+    slackLeadMinutes: 40, // Narrow Raggeds cut
   },
   {
     id: 'raccoon-cut',
@@ -335,6 +361,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 8,
     notes: 'NGA-charted (Chart 26255). Route to ocean side and Crooked Island. Strong currents — Raccoon–Narin reef excellent snorkeling at slack. Limited data — verify visually.',
     group: 'raggeds',
+    slackLeadMinutes: 35, // Moderate width, some reef buffering
   },
   {
     id: 'man-o-war-cut',
@@ -347,6 +374,7 @@ export const cuts: CutDefinition[] = [
     mlwDepthFt: 8,
     notes: 'Large cut at south end of Raccoon Cay. Man O\' War Bay offers anchorage in good sand. Strong tidal flow — time for slack. Limited data — verify visually.',
     group: 'raggeds',
+    slackLeadMinutes: 25, // Large cut with bay anchorage, some buffering
   },
   {
     id: 'ragged-island-cut',
@@ -360,5 +388,6 @@ export const cuts: CutDefinition[] = [
     notes: 'Between Ragged Island and Little Ragged Island near Duncan Town. 6\' draft boats can transit but must work the tides. Popular cold front anchorage. Limited data — verify visually.',
     group: 'raggeds',
     depthCritical: true,
+    slackLeadMinutes: 35, // Moderate, near open bank
   },
 ]

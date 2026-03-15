@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { format, differenceInMinutes } from 'date-fns'
+import { format, differenceInMinutes, addMinutes } from 'date-fns'
 import type { HiLo } from '../types/tide.ts'
 import type { WindHourly } from '../types/wind.ts'
 import type { CutDefinition, CutStatus } from '../types/cut.ts'
@@ -104,6 +104,14 @@ export function computeCutStatus(
     }
   }
 
+  // Estimated slack: next tide event time minus slackLeadMinutes
+  let estimatedSlackTime: Date | null = null
+  let minutesToEstSlack: number | null = null
+  if (cut.slackLeadMinutes != null && cut.slackLeadMinutes > 0 && nextEvt) {
+    estimatedSlackTime = addMinutes(nextEvt.time, -cut.slackLeadMinutes)
+    minutesToEstSlack = differenceInMinutes(estimatedSlackTime, now)
+  }
+
   return {
     cut,
     tideDirection: direction,
@@ -129,6 +137,8 @@ export function computeCutStatus(
     bestDaylightWindow,
     depthNowFt,
     nextHighTide,
+    estimatedSlackTime,
+    minutesToEstSlack,
   }
 }
 

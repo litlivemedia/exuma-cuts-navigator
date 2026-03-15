@@ -21,6 +21,10 @@ export interface CutDefinition {
   mlwDepthFt?: number
   /** If true, depth is the primary concern, not waves/current. */
   depthCritical?: boolean
+  /** Estimated minutes that slack/current reversal leads the predicted tide time.
+   *  Based on field observations: narrow cuts feeding open bank = high lead;
+   *  cuts buffered by shallows/sandbars = low lead. */
+  slackLeadMinutes?: number
 }
 
 export interface CutStatus {
@@ -49,6 +53,10 @@ export interface CutStatus {
     type: 'H' | 'L'
     label: string
   } | null
+  /** Estimated slack time (tide time minus slackLeadMinutes). Null if no lead offset. */
+  estimatedSlackTime: Date | null
+  /** Minutes until estimated slack (negative = in the past). */
+  minutesToEstSlack: number | null
   /** Estimated current depth in feet (mlwDepth + tide height). Available for all cuts with mlwDepthFt. */
   depthNowFt: number | null
   /** Next high tide info. Available for all cuts with mlwDepthFt. */
