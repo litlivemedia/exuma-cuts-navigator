@@ -239,15 +239,15 @@ export const cuts: CutDefinition[] = [
     slackLeadMinutes: 20, // Opens into large Elizabeth Harbour, semi-enclosed
   },
   {
-    id: 'man-of-war-channel',
-    name: 'Man of War Channel',
-    lat: 23.540,
-    lon: -75.790,
+    id: 'three-fathom-channel',
+    name: 'Three Fathom Channel',
+    lat: 23.487,
+    lon: -75.674,
     offsetMinutes: 65,
     maxCurrentKnots: 2.0,
     bearingDeg: 270,
-    mlwDepthFt: 8,
-    notes: 'South entrance to Elizabeth Harbour past Stocking Island. Leads to Three Fathom Channel inside the harbour. Easier approach than Conch Cay Cut in some conditions.',
+    mlwDepthFt: 16,
+    notes: 'Approach to Elizabeth Harbour between coral heads and hard bars. Mostly deep but use caution when large swells are in Exuma Sound — breakers can occur along the coral reef. Good visibility required.',
     group: 'southern',
     slackLeadMinutes: 20, // Opens into Elizabeth Harbour, semi-enclosed
   },
