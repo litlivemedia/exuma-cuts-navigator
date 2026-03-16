@@ -174,6 +174,13 @@ function WindowRow({
         </span>
       </div>
 
+      {/* CutNav Slack prediction */}
+      {w.cutNavSlackTime && (
+        <p className="mt-1 text-[12px] text-indigo-500">
+          CutNav Slack {format(w.cutNavSlackTime, 'h:mm a')}
+        </p>
+      )}
+
       {/* Row 2: Conditions sentence */}
       <p className="mt-1 text-[13px] text-slate-400 leading-relaxed">
         {w.type === 'H' ? 'High' : 'Low'} slack

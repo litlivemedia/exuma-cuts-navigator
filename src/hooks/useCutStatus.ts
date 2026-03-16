@@ -105,10 +105,14 @@ export function computeCutStatus(
   }
 
   // Estimated slack: next tide event time minus slackLeadMinutes
+  // Low slack gets 30% of the lead (ebb drains into open ocean = much less back-pressure effect)
   let estimatedSlackTime: Date | null = null
   let minutesToEstSlack: number | null = null
   if (cut.slackLeadMinutes != null && cut.slackLeadMinutes > 0 && nextEvt) {
-    estimatedSlackTime = addMinutes(nextEvt.time, -cut.slackLeadMinutes)
+    const leadMin = nextEvt.type === 'H'
+      ? cut.slackLeadMinutes
+      : Math.round(cut.slackLeadMinutes * 0.3)
+    estimatedSlackTime = addMinutes(nextEvt.time, -leadMin)
     minutesToEstSlack = differenceInMinutes(estimatedSlackTime, now)
   }
 

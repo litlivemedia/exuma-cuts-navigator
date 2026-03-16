@@ -1,4 +1,4 @@
-import { differenceInHours, format, startOfDay, addDays } from 'date-fns'
+import { differenceInHours, format, startOfDay, addDays, addMinutes } from 'date-fns'
 import type { HiLo } from '../types/tide.ts'
 import type { WindHourly } from '../types/wind.ts'
 import type { CutDefinition } from '../types/cut.ts'
@@ -48,6 +48,8 @@ export interface TransitWindow {
   heightFt: number
   /** Depth at window (all cuts with mlwDepthFt) */
   depthFt: number | null
+  /** CutNav Slack predicted time (tide time minus geometry-based lead) */
+  cutNavSlackTime: Date | null
 }
 
 export interface TransitDay {
@@ -226,6 +228,16 @@ export function scoreTransitWindows(
       isDaylightWindow,
     )
 
+    // CutNav Slack: shift tide time by geometry-based lead
+    // Low slack gets 30% of the lead (ebb drains into open ocean = much less back-pressure effect)
+    let cutNavSlackTime: Date | null = null
+    if (cut.slackLeadMinutes != null && cut.slackLeadMinutes > 0) {
+      const leadMin = sw.type === 'H'
+        ? cut.slackLeadMinutes
+        : Math.round(cut.slackLeadMinutes * 0.3)
+      cutNavSlackTime = addMinutes(sw.center, -leadMin)
+    }
+
     const tw: TransitWindow = {
       time: sw.center,
       start: sw.start,
@@ -248,6 +260,7 @@ export function scoreTransitWindows(
       currentSpeedKnots: currentSpeed,
       heightFt,
       depthFt,
+      cutNavSlackTime,
     }
 
     tw.summary = buildSummary(tw)
