@@ -107,19 +107,6 @@ export const cuts: CutDefinition[] = [
     slackLeadMinutes: 45, // Narrow with rocky restrictions, feeds bank
   },
   {
-    id: 'obriens',
-    name: "O'Brien's",
-    lat: 24.323,
-    lon: -76.552,
-    offsetMinutes: -10,
-    maxCurrentKnots: 2.5,
-    bearingDeg: 50,
-    mlwDepthFt: 6,
-    notes: "Near O'Brien's Cay and Cambridge Cay; dive sites nearby.",
-    group: 'exuma',
-    slackLeadMinutes: 40, // Moderate width, feeds bank
-  },
-  {
     id: 'bell-cut',
     name: 'Bell Cut',
     lat: 24.327,
@@ -131,6 +118,19 @@ export const cuts: CutDefinition[] = [
     notes: 'Near Bell Island and Soldier Cay in the central Exumas.',
     group: 'exuma',
     slackLeadMinutes: 40,
+  },
+  {
+    id: 'obriens',
+    name: "O'Brien's",
+    lat: 24.323,
+    lon: -76.552,
+    offsetMinutes: -10,
+    maxCurrentKnots: 2.5,
+    bearingDeg: 50,
+    mlwDepthFt: 6,
+    notes: "Near O'Brien's Cay and Cambridge Cay; dive sites nearby.",
+    group: 'exuma',
+    slackLeadMinutes: 40, // Moderate width, feeds bank
   },
   {
     id: 'conch-cut',
@@ -172,19 +172,6 @@ export const cuts: CutDefinition[] = [
     slackLeadMinutes: 40,
   },
   {
-    id: 'gaulin',
-    name: 'Gaulin',
-    lat: 24.117,
-    lon: -76.400,
-    offsetMinutes: 15,
-    maxCurrentKnots: 2.5,
-    bearingDeg: 55,
-    mlwDepthFt: 6,
-    notes: 'Near Gaulin Cay; central Exumas.',
-    group: 'exuma',
-    slackLeadMinutes: 45, // Narrow, feeds open bank
-  },
-  {
     id: 'dotham',
     name: 'Dotham',
     lat: 24.120,
@@ -196,6 +183,19 @@ export const cuts: CutDefinition[] = [
     notes: 'Access to Black Point Settlement. Can be dangerous — "White Horses" breaking seas when east wind opposes ebb. Avoid in strong east winds.',
     group: 'exuma',
     slackLeadMinutes: 55, // 400ft narrow, feeds open bank — observed 57 min lead
+  },
+  {
+    id: 'gaulin',
+    name: 'Gaulin',
+    lat: 24.117,
+    lon: -76.400,
+    offsetMinutes: 15,
+    maxCurrentKnots: 2.5,
+    bearingDeg: 55,
+    mlwDepthFt: 6,
+    notes: 'Near Gaulin Cay; central Exumas.',
+    group: 'exuma',
+    slackLeadMinutes: 45, // Narrow, feeds open bank
   },
   {
     id: 'farmers',
@@ -343,6 +343,19 @@ export const cuts: CutDefinition[] = [
     slackLeadMinutes: 20, // Opens into large Elizabeth Harbour, semi-enclosed
   },
   {
+    id: 'north-channel-rocks',
+    name: 'North Channel Rocks',
+    lat: 23.495,
+    lon: -75.667,
+    offsetMinutes: 68,
+    maxCurrentKnots: 2.0,
+    bearingDeg: 45,
+    mlwDepthFt: 10,
+    notes: 'Rocky passage south of Guana Cay near Moriah Harbour. Navigate with caution.',
+    group: 'southern',
+    slackLeadMinutes: 25,
+  },
+  {
     id: 'three-fathom-channel',
     name: 'Three Fathom Channel',
     lat: 23.487,
@@ -357,19 +370,6 @@ export const cuts: CutDefinition[] = [
   },
 
   // === Off to The Raggeds ===
-  {
-    id: 'north-channel-rocks',
-    name: 'North Channel Rocks',
-    lat: 23.495,
-    lon: -75.667,
-    offsetMinutes: 68,
-    maxCurrentKnots: 2.0,
-    bearingDeg: 45,
-    mlwDepthFt: 10,
-    notes: 'Rocky passage south of Guana Cay near Moriah Harbour. Navigate with caution.',
-    group: 'raggeds',
-    slackLeadMinutes: 25,
-  },
   {
     id: 'hog-cay-cut',
     name: 'Hog Cay Cut',
