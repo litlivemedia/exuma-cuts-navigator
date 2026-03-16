@@ -156,8 +156,9 @@ export function CutCard({
         {/* ── CutNav Slack ── */}
         {status.estimatedSlackTime && status.minutesToEstSlack != null && (
           <div className="mt-3 text-[13px]">
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 flex-wrap">
               <span className="text-slate-400">CutNav Slack</span>
+              <span className="text-[9px] font-bold text-indigo-400 bg-indigo-50 px-1 py-0.5 rounded uppercase tracking-wider">Beta</span>
               <span className="font-medium text-indigo-600">
                 {format(status.estimatedSlackTime, 'h:mm a')}
               </span>
@@ -167,9 +168,12 @@ export function CutCard({
               {status.minutesToEstSlack <= 0 && status.minutesToEstSlack > -30 && (
                 <span className="text-emerald-500 font-medium">now</span>
               )}
+              <span className="text-slate-300 text-[12px]">
+                ({status.nextEventType === 'H' ? 'high' : 'low'} tide {format(status.nextEventTime, 'h:mm a')})
+              </span>
             </div>
             <p className="text-[11px] text-slate-300 mt-0.5 italic">
-              based on an absurdly complex and perhaps completely wrong algorithm
+              estimate based on an absurdly complex and perhaps completely wrong algorithm
             </p>
           </div>
         )}

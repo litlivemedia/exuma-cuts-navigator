@@ -177,7 +177,11 @@ function WindowRow({
       {/* CutNav Slack prediction */}
       {w.cutNavSlackTime && (
         <p className="mt-1 text-[12px] text-indigo-500">
-          CutNav Slack {format(w.cutNavSlackTime, 'h:mm a')}
+          CutNav Slack <span className="text-[9px] font-bold text-indigo-400 bg-indigo-50 px-1 py-0.5 rounded uppercase tracking-wider">Beta</span>{' '}
+          {format(w.cutNavSlackTime, 'h:mm a')}
+          <span className="text-slate-300 ml-1">
+            ({w.type === 'H' ? 'high' : 'low'} tide {format(w.time, 'h:mm a')})
+          </span>
         </p>
       )}
 
