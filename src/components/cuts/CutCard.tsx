@@ -8,10 +8,12 @@ export function CutCard({
   status,
   marineData,
   onSelect,
+  onReport,
 }: {
   status: CutStatus
   marineData: MarineHourly[]
   onSelect: () => void
+  onReport: () => void
 }) {
   const depth = status.depthNowFt
   const isOpposing = status.isWindAgainstCurrent
@@ -185,7 +187,13 @@ export function CutCard({
             View Details
           </span>
           <span className="text-slate-300">·</span>
-          <span className="flex items-center gap-1 text-[12px] text-indigo-500">
+          <span
+            role="button"
+            tabIndex={0}
+            onClick={(e) => { e.stopPropagation(); onReport() }}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); onReport() } }}
+            className="flex items-center gap-1 text-[12px] text-indigo-500 hover:text-indigo-700 active:text-indigo-800 cursor-pointer"
+          >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 20h9" />
               <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />

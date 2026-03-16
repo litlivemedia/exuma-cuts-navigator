@@ -10,7 +10,7 @@ export function ListView({
   marineData,
 }: {
   statuses: CutStatus[]
-  onSelect: (id: string) => void
+  onSelect: (id: string, showReport?: boolean) => void
   dailyForecasts: MarineDaily[]
   marineData: MarineHourly[]
 }) {
@@ -86,6 +86,7 @@ export function ListView({
                 status={s}
                 marineData={marineData}
                 onSelect={() => onSelect(s.cut.id)}
+                onReport={() => onSelect(s.cut.id, true)}
               />
             ))}
           </div>
@@ -112,6 +113,7 @@ export function ListView({
                 status={s}
                 marineData={marineData}
                 onSelect={() => onSelect(s.cut.id)}
+                onReport={() => onSelect(s.cut.id, true)}
               />
             ))}
           </div>
@@ -138,6 +140,7 @@ export function ListView({
                 status={s}
                 marineData={marineData}
                 onSelect={() => onSelect(s.cut.id)}
+                onReport={() => onSelect(s.cut.id, true)}
               />
             ))}
           </div>

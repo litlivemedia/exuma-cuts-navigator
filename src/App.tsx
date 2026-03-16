@@ -15,7 +15,7 @@ import { ShipwreckFact } from './components/fun/ShipwreckFact.tsx'
 
 function App() {
   const [tab, setTab] = useState<TabId>('list')
-  const [selectedCutId, setSelectedCutId] = useState<string | null>(null)
+  const [selectedCut, setSelectedCut] = useState<{ id: string; showReport?: boolean } | null>(null)
   const [now, setNow] = useState(new Date())
   const [isOnline, setIsOnline] = useState(navigator.onLine)
 
@@ -50,17 +50,17 @@ function App() {
     refreshMarine()
   }, [refreshTides, refreshWind, refreshMarine])
 
-  const handleSelectCut = useCallback((id: string) => {
-    setSelectedCutId(id)
+  const handleSelectCut = useCallback((id: string, showReport?: boolean) => {
+    setSelectedCut({ id, showReport })
   }, [])
 
-  const selectedStatus = statuses.find((s) => s.cut.id === selectedCutId)
+  const selectedStatus = statuses.find((s) => s.cut.id === selectedCut?.id)
 
   const loading = tidesLoading || windLoading
   const error = tidesError || windError
 
   // Detail view
-  if (selectedCutId && selectedStatus && tides && wind) {
+  if (selectedCut && selectedStatus && tides && wind) {
     return (
       <CutDetail
         status={selectedStatus}
@@ -68,7 +68,8 @@ function App() {
         windData={wind}
         marineData={marine ?? []}
         now={now}
-        onBack={() => setSelectedCutId(null)}
+        onBack={() => setSelectedCut(null)}
+        initialShowReport={selectedCut.showReport}
       />
     )
   }

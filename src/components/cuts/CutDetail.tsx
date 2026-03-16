@@ -18,6 +18,7 @@ export function CutDetail({
   marineData,
   now,
   onBack,
+  initialShowReport,
 }: {
   status: CutStatus
   nassauTides: HiLo[]
@@ -25,13 +26,21 @@ export function CutDetail({
   marineData: MarineHourly[]
   now: Date
   onBack: () => void
+  initialShowReport?: boolean
 }) {
-  const [showReport, setShowReport] = useState(false)
+  const [showReport, setShowReport] = useState(initialShowReport ?? false)
 
-  // Scroll to top when entering detail view
+  // Scroll to report form when opened via direct link
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [status.cut.id])
+    if (initialShowReport) {
+      // Small delay to let the DOM render
+      setTimeout(() => {
+        document.getElementById('transit-report-section')?.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
+    } else {
+      window.scrollTo(0, 0)
+    }
+  }, [status.cut.id, initialShowReport])
 
   const adjusted = applyOffset(nassauTides, status.cut.offsetMinutes)
 
@@ -292,7 +301,7 @@ export function CutDetail({
       </div>
 
       {/* ── Report Transit ── */}
-      <div className="px-5 pt-4">
+      <div id="transit-report-section" className="px-5 pt-4">
         <div className="mx-0 border-t border-slate-100 mb-4" />
         {showReport ? (
           <TransitReport cut={status.cut} onClose={() => setShowReport(false)} />
