@@ -62,9 +62,12 @@ export function CutCard({
   const wave = getMarineAtTime(marineData, new Date())
 
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onSelect}
-      className={`w-full text-left rounded-2xl bg-white shadow-sm active:scale-[0.995] transition-all overflow-hidden ${
+      onKeyDown={(e) => { if (e.key === 'Enter') onSelect() }}
+      className={`w-full text-left rounded-2xl bg-white shadow-sm active:scale-[0.995] transition-all overflow-hidden cursor-pointer ${
         isOpposing && isHazardous
           ? 'border-t-[3px] border-t-red-500 border border-red-200/80'
           : isOpposing && isCaution
@@ -205,7 +208,7 @@ export function CutCard({
           <path d="m9 18 6-6-6-6" />
         </svg>
       </div>
-    </button>
+    </div>
   )
 }
 
