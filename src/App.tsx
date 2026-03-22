@@ -8,14 +8,19 @@ import { useAllCutStatuses } from './hooks/useCutStatus.ts'
 import { BottomNav, type TabId } from './components/layout/BottomNav.tsx'
 import { ListView } from './pages/ListView.tsx'
 import { MapView } from './pages/MapView.tsx'
+import { ActivitiesView } from './pages/ActivitiesView.tsx'
 import { SettingsView } from './pages/SettingsView.tsx'
 import { CutDetail } from './components/cuts/CutDetail.tsx'
+import { ActivityDetail } from './components/activities/ActivityDetail.tsx'
 import { Loading } from './components/common/Loading.tsx'
 import { ShipwreckFact } from './components/fun/ShipwreckFact.tsx'
+import { activities } from './data/activities.ts'
+import { assessActivity } from './services/activityEngine.ts'
 
 function App() {
   const [tab, setTab] = useState<TabId>('list')
   const [selectedCut, setSelectedCut] = useState<{ id: string; showReport?: boolean } | null>(null)
+  const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null)
   const [now, setNow] = useState(new Date())
   const [isOnline, setIsOnline] = useState(navigator.onLine)
 
@@ -58,6 +63,24 @@ function App() {
 
   const loading = tidesLoading || windLoading
   const error = tidesError || windError
+
+  // Activity detail view
+  if (selectedActivityId && tides && wind) {
+    const activity = activities.find((a) => a.id === selectedActivityId)
+    if (activity) {
+      const cut = cuts.find((c) => c.id === activity.nearestCutId)
+      const offset = cut?.offsetMinutes ?? 0
+      const assessment = assessActivity(activity, tides, wind, now, offset)
+      return (
+        <ActivityDetail
+          activity={activity}
+          condition={assessment.condition}
+          reasons={assessment.reasons}
+          onBack={() => setSelectedActivityId(null)}
+        />
+      )
+    }
+  }
 
   // Detail view
   if (selectedCut && selectedStatus && tides && wind) {
@@ -111,6 +134,7 @@ function App() {
           {([
             { id: 'list' as TabId, label: 'Cuts' },
             { id: 'map' as TabId, label: 'Map' },
+            { id: 'activities' as TabId, label: 'Activities' },
             { id: 'settings' as TabId, label: 'Info' },
           ]).map((t) => (
             <button
@@ -160,6 +184,9 @@ function App() {
             )}
             {tab === 'map' && (
               <MapView statuses={statuses} onSelect={handleSelectCut} />
+            )}
+            {tab === 'activities' && (
+              <ActivitiesView tides={tides} wind={wind} now={now} onSelect={setSelectedActivityId} />
             )}
             {tab === 'settings' && (
               <SettingsView

@@ -1,4 +1,4 @@
-export type TabId = 'list' | 'map' | 'settings'
+export type TabId = 'list' | 'map' | 'activities' | 'settings'
 
 export function BottomNav({
   active,
@@ -10,6 +10,7 @@ export function BottomNav({
   const tabs: { id: TabId; label: string; icon: string }[] = [
     { id: 'list', label: 'Cuts', icon: 'M4 6h16M4 12h16M4 18h16' },
     { id: 'map', label: 'Map', icon: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7' },
+    { id: 'activities', label: 'Activities', icon: 'M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
     { id: 'settings', label: 'Info', icon: 'M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z' },
   ]
 
