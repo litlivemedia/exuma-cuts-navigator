@@ -1,4 +1,9 @@
+import { format } from 'date-fns'
 import type { Activity, ActivityCondition } from '../../types/activity.ts'
+import type { HiLo } from '../../types/tide.ts'
+import type { WindHourly } from '../../types/wind.ts'
+import type { TripWindow } from '../../services/activityEngine.ts'
+import { getActivityTripWindows } from '../../services/activityEngine.ts'
 
 const conditionCfg: Record<ActivityCondition, { dot: string; label: string; text: string; bg: string }> = {
   ideal: { dot: 'bg-emerald-500', label: 'Ideal', text: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-200' },
@@ -11,13 +16,22 @@ export function ActivityDetail({
   activity,
   condition,
   reasons,
+  tides,
+  wind,
+  now,
+  offsetMinutes,
   onBack,
 }: {
   activity: Activity
   condition: ActivityCondition
   reasons: string[]
+  tides: HiLo[]
+  wind: WindHourly[]
+  now: Date
+  offsetMinutes: number
   onBack: () => void
 }) {
+  const tripWindows = getActivityTripWindows(activity, tides, wind, now, offsetMinutes)
   const cfg = conditionCfg[condition]
 
   return (
@@ -57,6 +71,49 @@ export function ActivityDetail({
             <p key={i} className="text-xs text-slate-600 mt-0.5">• {r}</p>
           ))}
         </div>
+
+        {/* Trip Planner */}
+        {tripWindows.length > 0 && (
+          <section>
+            <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-2">Trip Planner</h2>
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+              {(() => {
+                let lastDay = ''
+                return tripWindows.slice(0, 8).map((w, i) => {
+                  const showDay = w.dayLabel !== lastDay
+                  lastDay = w.dayLabel
+                  const windowCfg = conditionCfg[w.condition]
+                  const isPast = w.end < now
+                  const isActive = w.start <= now && w.end >= now
+                  return (
+                    <div key={i}>
+                      {showDay && (
+                        <div className="bg-slate-50 px-3 py-1.5 border-b border-slate-100">
+                          <span className="text-xs font-bold text-slate-600">{w.dayLabel}</span>
+                        </div>
+                      )}
+                      <div className={`px-3 py-2.5 flex items-center justify-between border-b border-slate-50 ${isPast ? 'opacity-40' : ''} ${isActive ? 'bg-emerald-50/50' : ''}`}>
+                        <div>
+                          <span className={`text-sm font-semibold ${isActive ? 'text-emerald-700' : 'text-slate-900'}`}>
+                            {format(w.start, 'h:mm a')} – {format(w.end, 'h:mm a')}
+                          </span>
+                          {isActive && (
+                            <span className="ml-2 text-xs font-bold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded">NOW</span>
+                          )}
+                          <p className="text-xs text-slate-500 mt-0.5">{w.label}</p>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className={`w-2 h-2 rounded-full ${windowCfg.dot}`} />
+                          <span className={`text-xs font-semibold ${windowCfg.text}`}>{windowCfg.label}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })
+              })()}
+            </div>
+          </section>
+        )}
 
         {/* Overview */}
         <section>

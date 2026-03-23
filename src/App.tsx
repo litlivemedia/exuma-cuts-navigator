@@ -76,6 +76,10 @@ function App() {
           activity={activity}
           condition={assessment.condition}
           reasons={assessment.reasons}
+          tides={tides}
+          wind={wind}
+          now={now}
+          offsetMinutes={offset}
           onBack={() => setSelectedActivityId(null)}
         />
       )
@@ -180,7 +184,7 @@ function App() {
         ) : (
           <>
             {tab === 'list' && (
-              <ListView statuses={statuses} onSelect={handleSelectCut} dailyForecasts={dailyForecasts} marineData={marine ?? []} />
+              <ListView statuses={statuses} onSelect={handleSelectCut} onActivities={() => setTab('activities')} dailyForecasts={dailyForecasts} marineData={marine ?? []} />
             )}
             {tab === 'map' && (
               <MapView statuses={statuses} onSelect={handleSelectCut} />

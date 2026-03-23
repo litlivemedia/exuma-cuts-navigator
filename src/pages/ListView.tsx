@@ -6,11 +6,13 @@ import { WeatherBriefing } from '../components/weather/WeatherBriefing.tsx'
 export function ListView({
   statuses,
   onSelect,
+  onActivities,
   dailyForecasts,
   marineData,
 }: {
   statuses: CutStatus[]
   onSelect: (id: string, showReport?: boolean) => void
+  onActivities?: () => void
   dailyForecasts: MarineDaily[]
   marineData: MarineHourly[]
 }) {
@@ -68,6 +70,23 @@ export function ListView({
           Plan early and watch the water, not just the clock.
         </p>
       </div>
+
+      {/* ═══ ACTIVITIES PROMO ═══ */}
+      {onActivities && (
+        <button
+          onClick={onActivities}
+          className="w-full rounded-xl bg-gradient-to-r from-sky-50 to-indigo-50 border border-sky-200/60 px-4 py-3 mb-1 flex items-center gap-3 active:scale-[0.995] transition-transform text-left"
+        >
+          <span className="text-2xl">🌊</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-slate-800">Tide-Dependent Activities</p>
+            <p className="text-xs text-slate-500 mt-0.5">Lazy River, Washing Machine, Bubble Bath — see what's ideal right now</p>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-sky-400 flex-shrink-0">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+      )}
 
       {/* ═══ EXUMA CUTS ═══ */}
       {exumaCuts.length > 0 && (

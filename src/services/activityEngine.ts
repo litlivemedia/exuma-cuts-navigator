@@ -1,7 +1,7 @@
 import type { Activity, ActivityCondition } from '../types/activity.ts'
 import type { HiLo } from '../types/tide.ts'
 import type { WindHourly } from '../types/wind.ts'
-import { differenceInHours } from 'date-fns'
+import { differenceInHours, addHours, format, isSameDay, startOfDay, addDays } from 'date-fns'
 
 /**
  * Find the nearest high tide to `now` (past or future, within 12h).
@@ -163,4 +163,104 @@ export function assessActivity(
     score >= 3 ? 'ideal' : score >= 2 ? 'good' : score >= 1 ? 'fair' : 'poor'
 
   return { condition, reasons }
+}
+
+export interface TripWindow {
+  start: Date
+  end: Date
+  peakTime: Date
+  label: string
+  condition: ActivityCondition
+  dayLabel: string
+}
+
+/**
+ * Get upcoming trip windows for an activity over the next 3 days.
+ */
+export function getActivityTripWindows(
+  activity: Activity,
+  tides: HiLo[],
+  wind: WindHourly[],
+  now: Date,
+  offsetMinutes: number,
+): TripWindow[] {
+  const offsetTides = tides.map((t) => ({
+    ...t,
+    time: new Date(t.time.getTime() + offsetMinutes * 60000),
+  }))
+
+  const windows: TripWindow[] = []
+  const cutoff = addDays(startOfDay(now), 3)
+
+  // For tide-window activities (Lazy River): window around each high tide
+  if (activity.tideWindow) {
+    const [lo, hi] = activity.tideWindow.relativeToHigh
+    for (const t of offsetTides) {
+      if (t.type !== 'H') continue
+      const start = addHours(t.time, lo)
+      const end = addHours(t.time, hi)
+      if (end < now || start > cutoff) continue
+      // Only daylight windows (6am-7pm)
+      const hour = t.time.getHours()
+      if (hour < 5 || hour > 19) continue
+
+      windows.push({
+        start,
+        end,
+        peakTime: t.time,
+        label: `High tide ${format(t.time, 'h:mm a')}`,
+        condition: assessActivity(activity, tides, wind, t.time, offsetMinutes).condition,
+        dayLabel: isSameDay(start, now) ? 'Today' : isSameDay(start, addDays(now, 1)) ? 'Tomorrow' : format(start, 'EEEE, MMM d'),
+      })
+    }
+  }
+
+  // For strong-current activities (Washing Machine): mid-tide windows
+  if (activity.bestWithStrongCurrent) {
+    for (const t of offsetTides) {
+      if (t.type !== 'H') continue
+      const peakEbb = addHours(t.time, 3) // 3h after high = peak ebb
+      const peakFlood = addHours(t.time, -3) // 3h before high = peak flood
+      for (const peak of [peakFlood, peakEbb]) {
+        if (peak < now || peak > cutoff) continue
+        const hour = peak.getHours()
+        if (hour < 6 || hour > 18) continue
+        const start = addHours(peak, -1)
+        const end = addHours(peak, 1)
+        const direction = peak === peakEbb ? 'ebb' : 'flood'
+        windows.push({
+          start,
+          end,
+          peakTime: peak,
+          label: `Peak ${direction} current`,
+          condition: assessActivity(activity, tides, wind, peak, offsetMinutes).condition,
+          dayLabel: isSameDay(peak, now) ? 'Today' : isSameDay(peak, addDays(now, 1)) ? 'Tomorrow' : format(peak, 'EEEE, MMM d'),
+        })
+      }
+    }
+  }
+
+  // For rough-seas activities (Rachel's Bubble Bath): high tides with wind check
+  if (activity.bestWithRoughSeas) {
+    for (const t of offsetTides) {
+      if (t.type !== 'H') continue
+      const start = addHours(t.time, -2)
+      const end = addHours(t.time, 2)
+      if (end < now || start > cutoff) continue
+      const hour = t.time.getHours()
+      if (hour < 6 || hour > 18) continue
+      windows.push({
+        start,
+        end,
+        peakTime: t.time,
+        label: `High tide ${format(t.time, 'h:mm a')}`,
+        condition: assessActivity(activity, tides, wind, t.time, offsetMinutes).condition,
+        dayLabel: isSameDay(start, now) ? 'Today' : isSameDay(start, addDays(now, 1)) ? 'Tomorrow' : format(start, 'EEEE, MMM d'),
+      })
+    }
+  }
+
+  // Sort by start time
+  windows.sort((a, b) => a.start.getTime() - b.start.getTime())
+  return windows
 }
