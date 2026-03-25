@@ -1,5 +1,5 @@
 import 'leaflet/dist/leaflet.css'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import { useEffect, useRef } from 'react'
 import type { CutStatus, SafetyLevel } from '../../types/cut.ts'
@@ -71,6 +71,9 @@ export function CutMap({
           icon={createIcon(s.safetyLevel)}
           eventHandlers={{ click: () => onSelect(s.cut.id) }}
         >
+          <Tooltip direction="top" offset={[0, -14]} opacity={0.95}>
+            <span style={{ fontSize: '12px', fontWeight: 600 }}>{s.cut.name}</span>
+          </Tooltip>
           <Popup>
             <div style={{ fontSize: '13px', minWidth: '160px', lineHeight: '1.5' }}>
               <strong>{s.cut.name}</strong>
