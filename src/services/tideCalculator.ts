@@ -139,13 +139,39 @@ export function getNextSlackWindow(
   return null
 }
 
-// Bahamas daylight: roughly 6:30am to 6:30pm year-round
-const DAYLIGHT_START_HOUR = 6.5
-const DAYLIGHT_END_HOUR = 18.5
+// ── Solar calculation for Bahamas (lat ~24.25°N) ──
+// Uses the NOAA simplified solar position algorithm
+const EXUMA_LAT = 24.25
+const DEG = Math.PI / 180
+
+function getSunTimes(date: Date): { sunrise: number; sunset: number } {
+  const start = new Date(date.getFullYear(), 0, 1)
+  const dayOfYear = Math.floor((date.getTime() - start.getTime()) / 86400000) + 1
+
+  // Solar declination (simplified)
+  const declination = -23.45 * Math.cos(DEG * (360 / 365) * (dayOfYear + 10))
+
+  // Hour angle at sunrise/sunset
+  const latRad = EXUMA_LAT * DEG
+  const declRad = declination * DEG
+  const cosHourAngle = -Math.tan(latRad) * Math.tan(declRad)
+  const hourAngle = Math.acos(Math.max(-1, Math.min(1, cosHourAngle))) / DEG
+
+  // Solar noon is ~12:00 in local standard time (Bahamas EST = UTC-5)
+  // Small equation-of-time correction ignored for simplicity (~±15 min)
+  const solarNoon = 12.0
+  const sunrise = solarNoon - hourAngle / 15
+  const sunset = solarNoon + hourAngle / 15
+
+  return { sunrise, sunset }
+}
+
+const TWILIGHT_MINUTES = 30 // usable light before sunrise and after sunset
 
 function isDaylight(date: Date): boolean {
   const hour = date.getHours() + date.getMinutes() / 60
-  return hour >= DAYLIGHT_START_HOUR && hour <= DAYLIGHT_END_HOUR
+  const { sunrise, sunset } = getSunTimes(date)
+  return hour >= (sunrise - TWILIGHT_MINUTES / 60) && hour <= (sunset + TWILIGHT_MINUTES / 60)
 }
 
 export function getDaylightSlackWindows(

@@ -61,12 +61,28 @@ export interface TransitDay {
 
 // ── Scoring ────────────────────────────────────────────────────
 
-const DAYLIGHT_START = 6.5  // 6:30 AM
-const DAYLIGHT_END = 18.5   // 6:30 PM
+// Solar calculation for Bahamas (lat ~24.25°N)
+const EXUMA_LAT = 24.25
+const DEG = Math.PI / 180
+
+function getSunTimes(date: Date): { sunrise: number; sunset: number } {
+  const start = new Date(date.getFullYear(), 0, 1)
+  const dayOfYear = Math.floor((date.getTime() - start.getTime()) / 86400000) + 1
+  const declination = -23.45 * Math.cos(DEG * (360 / 365) * (dayOfYear + 10))
+  const latRad = EXUMA_LAT * DEG
+  const declRad = declination * DEG
+  const cosHA = -Math.tan(latRad) * Math.tan(declRad)
+  const hourAngle = Math.acos(Math.max(-1, Math.min(1, cosHA))) / DEG
+  const solarNoon = 12.0
+  return { sunrise: solarNoon - hourAngle / 15, sunset: solarNoon + hourAngle / 15 }
+}
+
+const TWILIGHT_MINUTES = 30 // usable light before sunrise and after sunset
 
 function isDaylight(date: Date): boolean {
   const h = date.getHours() + date.getMinutes() / 60
-  return h >= DAYLIGHT_START && h <= DAYLIGHT_END
+  const { sunrise, sunset } = getSunTimes(date)
+  return h >= (sunrise - TWILIGHT_MINUTES / 60) && h <= (sunset + TWILIGHT_MINUTES / 60)
 }
 
 function scoreSlackQuality(window: SlackWindow): number {
