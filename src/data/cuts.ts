@@ -179,7 +179,7 @@ export const cuts: CutDefinition[] = [
     offsetMinutes: 15,
     maxCurrentKnots: 3.5,
     bearingDeg: 55,
-    mlwDepthFt: 29.5, // Chart shows 9m (~29.5ft) at MLW
+    mlwDepthFt: 8,
     notes: 'Access to Black Point Settlement. Can be dangerous — "White Horses" breaking seas when east wind opposes ebb. Avoid in strong east winds.',
     group: 'exuma',
     slackLeadMinutes: 55, // 400ft narrow, feeds open bank — observed 57 min lead
