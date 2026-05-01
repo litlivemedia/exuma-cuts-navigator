@@ -2,7 +2,6 @@ import { format } from 'date-fns'
 import type { Activity, ActivityCondition } from '../../types/activity.ts'
 import type { HiLo } from '../../types/tide.ts'
 import type { WindHourly } from '../../types/wind.ts'
-import type { TripWindow } from '../../services/activityEngine.ts'
 import { getActivityTripWindows } from '../../services/activityEngine.ts'
 
 const conditionCfg: Record<ActivityCondition, { dot: string; label: string; text: string; bg: string }> = {

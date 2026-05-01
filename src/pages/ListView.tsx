@@ -27,7 +27,6 @@ export function ListView({
   ]
 
   const [showIndex, setShowIndex] = useState(false)
-  const allCuts = [...exumaCuts, ...southernCuts, ...raggedsCuts]
 
   const safetyDot: Record<string, string> = {
     safe: 'bg-emerald-500',
